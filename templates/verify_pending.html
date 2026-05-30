@@ -44,18 +44,25 @@
 
       <!-- Email display -->
       <div class="email-highlight">
-        {{ user.email|default:"your email address" }}
+        {{ email|default:"your email address" }}
       </div>
 
       <p class="auth-card-sub" style="margin-bottom:24px;">
         Click the link in that email to activate your PayTrack account. The link expires in <strong style="color:var(--white-70)">24 hours.</strong>
       </p>
 
+      {% if resent %}
+        <div class="auth-alert success" style="margin-bottom:24px;">
+          <span class="auth-alert-icon">✓</span>
+          <div>Verification email has been resent successfully.</div>
+        </div>
+      {% endif %}
+
       <!-- Steps -->
       <ul class="auth-steps">
         <li>
           <span class="step-num-badge">1</span>
-          Open the email from <strong style="color:var(--white-70)">noreply@paytrack.ng</strong>
+          Open the email from <strong style="color:var(--white-70)">noreply@djangopilot.com</strong>
         </li>
         <li>
           <span class="step-num-badge">2</span>
@@ -75,7 +82,7 @@
       <!-- Resend form -->
       <form method="post" action="{% url 'resend_verification' %}">
         {% csrf_token %}
-        <input type="hidden" name="email" value="{{ user.email|default:'' }}" />
+        <input type="hidden" name="email" value="{{ email|default:'' }}" />
         <button type="submit" id="resend-btn" class="btn-auth-ghost">
           Resend verification email
         </button>

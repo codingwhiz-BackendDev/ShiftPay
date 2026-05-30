@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Email Verified — PayTrack</title>
+  <title>Password Reset — PayTrack</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
@@ -32,39 +32,61 @@
   <main class="auth-center">
     <div class="auth-card auth-status-card">
 
-      {% if valid_link %}
+      {% if status == 'success' %}
 
         <!-- ── SUCCESS STATE ── -->
         <div class="auth-status-icon status-success">✓</div>
-        <h1 class="auth-card-title">Email verified!</h1>
+        <h1 class="auth-card-title">Password reset successful</h1>
         <p class="auth-card-sub">
-          Your email address has been confirmed. Your PayTrack account is now fully active — time to create your first invoice.
+          {{ message }}
         </p>
 
         <a href="{% url 'login' %}" class="btn-auth" style="text-decoration:none; display:flex;">
-          <span class="btn-text">Go to dashboard →</span>
+          <span class="btn-text">Sign in with new password →</span>
         </a>
 
-      {% else %}
+      {% elif status == 'invalid' %}
 
-        <!-- ── INVALID / EXPIRED LINK STATE ── -->
+        <!-- ── INVALID LINK STATE ── -->
         <div class="auth-status-icon status-warning">⚠</div>
-        <h1 class="auth-card-title">Link expired or invalid</h1>
+        <h1 class="auth-card-title">Invalid reset link</h1>
         <p class="auth-card-sub">
-          This verification link has either expired or already been used. Verification links are valid for <strong style="color:var(--white-70)">24 hours.</strong>
+          {{ message }}
         </p>
 
         <div class="auth-alert warning" style="text-align:left; margin-bottom:24px;">
           <span class="auth-alert-icon">🔗</span>
-          <div>Request a new link below — it takes 10 seconds and we'll send a fresh one instantly.</div>
+          <div>The reset link is invalid or has already been used.</div>
         </div>
 
-        <a href="{% url 'resend_verification' %}" class="btn-auth" style="text-decoration:none; display:flex;">
-          <span class="btn-text">Request a new verification link</span>
+        <a href="{% url 'forgot_password' %}" class="btn-auth" style="text-decoration:none; display:flex;">
+          <span class="btn-text">Request a new reset link</span>
         </a>
 
         <p class="auth-footer-text">
-          Already verified? <a href="{% url 'login' %}">Sign in</a>
+          <a href="{% url 'login' %}">Sign in</a>
+        </p>
+
+      {% elif status == 'expired' %}
+
+        <!-- ── EXPIRED LINK STATE ── -->
+        <div class="auth-status-icon status-warning">⚠</div>
+        <h1 class="auth-card-title">Reset link expired</h1>
+        <p class="auth-card-sub">
+          {{ message }}
+        </p>
+
+        <div class="auth-alert warning" style="text-align:left; margin-bottom:24px;">
+          <span class="auth-alert-icon">⏰</span>
+          <div>Reset links are valid for 24 hours. Please request a new one.</div>
+        </div>
+
+        <a href="{% url 'forgot_password' %}" class="btn-auth" style="text-decoration:none; display:flex;">
+          <span class="btn-text">Request a new reset link</span>
+        </a>
+
+        <p class="auth-footer-text">
+          <a href="{% url 'login' %}">Sign in</a>
         </p>
 
       {% endif %}

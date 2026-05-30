@@ -1,0 +1,335 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — ShiftPay</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #0A6640;
+      --accent: #F5A623;
+      --background: #F8F9FA;
+      --text: #212529;
+      --white: #ffffff;
+    }
+    body {
+      background: var(--background);
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text);
+    }
+    .navbar-brand {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      color: var(--primary) !important;
+      font-size: 24px;
+    }
+    .dashboard-container {
+      padding: 30px 0;
+    }
+    .stat-card {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      height: 100%;
+    }
+    .stat-label {
+      font-size: 13px;
+      color: #6c757d;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .stat-value {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 32px;
+      color: var(--primary);
+      margin: 8px 0;
+    }
+    .stat-change {
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .stat-change.up { color: var(--primary); }
+    .stat-change.down { color: #dc3545; }
+    .progress {
+      height: 8px;
+      border-radius: 4px;
+      background: #e9ecef;
+    }
+    .progress-bar {
+      background: var(--primary);
+    }
+    .progress-bar.warning { background: var(--accent); }
+    .progress-bar.danger { background: #dc3545; }
+    .shift-form {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .form-label {
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .form-control {
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      padding: 12px 16px;
+    }
+    .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(10, 102, 64, 0.1);
+    }
+    .btn-shift {
+      background: var(--primary);
+      border: none;
+      padding: 14px 32px;
+      font-weight: 600;
+      border-radius: 8px;
+      width: 100%;
+      color: var(--white);
+    }
+    .btn-shift:hover {
+      background: #085233;
+    }
+    .table-card {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .table th {
+      font-weight: 600;
+      color: #6c757d;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 2px solid #e9ecef;
+    }
+    .table td {
+      vertical-align: middle;
+    }
+    .badge-success { background: rgba(10, 102, 64, 0.1); color: var(--primary); }
+    .badge-warning { background: rgba(245, 166, 35, 0.1); color: var(--accent); }
+    .badge-danger { background: rgba(220, 53, 69, 0.1); color: #dc3545; }
+    .badge-secondary { background: rgba(108, 117, 125, 0.1); color: #6c757d; }
+    .eligibility-card {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .btn-advance {
+      background: var(--accent);
+      border: none;
+      padding: 12px 24px;
+      font-weight: 600;
+      border-radius: 8px;
+      color: var(--text);
+    }
+    .btn-advance:hover {
+      background: #e69520;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-white">
+  <div class="container">
+    <a class="navbar-brand" href="#">ShiftPay</a>
+    <div class="navbar-nav ms-auto">
+      <span class="nav-link me-3">{{ request.user.first_name }}</span>
+      <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container dashboard-container">
+  
+  <!-- Header -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <h1 style="font-family: 'Syne', sans-serif; font-weight: 700; color: var(--primary);">Good morning, {{ request.user.first_name }} 👋</h1>
+      <p style="color: #6c757d;">Your earnings, your advance.</p>
+    </div>
+  </div>
+
+  <!-- Stats Row -->
+  <div class="row g-4 mb-4">
+    <div class="col-md-3">
+      <div class="stat-card">
+        <div class="stat-label">Shifts this month</div>
+        <div class="stat-value">{{ shifts_this_month|default:0 }}</div>
+        <div class="stat-change up">Total logged</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="stat-card">
+        <div class="stat-label">Earnings this month</div>
+        <div class="stat-value">₦{{ earnings_this_month|default:0|floatformat:0 }}</div>
+        <div class="stat-change up">Total earned</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="stat-card">
+        <div class="stat-label">Trust Score</div>
+        <div class="stat-value">{{ trust_score|default:0 }}</div>
+        <div class="progress mt-2">
+          <div class="progress-bar {% if trust_score >= 70 %}{% elif trust_score >= 40 %}warning{% else %}danger{% endif %}" style="width: {{ trust_score|default:0 }}%"></div>
+        </div>
+        <div class="stat-change mt-2 {% if trust_score >= 70 %}up{% elif trust_score >= 40 %}text-warning{% else %}down{% endif %}">
+          {% if trust_score >= 70 %}Excellent{% elif trust_score >= 40 %}Good{% else %}Needs work{% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="stat-card">
+        <div class="stat-label">Advance Eligibility</div>
+        <div class="stat-value {% if is_eligible %}text-success{% else %}text-warning{% endif %}">
+          {% if is_eligible %}Eligible{% else %}Not eligible{% endif %}
+        </div>
+        <div class="stat-change {% if is_eligible %}up{% else %}text-warning{% endif %}">
+          {% if is_eligible %}Up to ₦{{ max_advance_amount|default:0|floatformat:0 }}{% else %}Log {{ shifts_needed }} more shifts{% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4 mb-4">
+    <!-- Log Shift Form -->
+    <div class="col-lg-5">
+      <div class="shift-form">
+        <h3 style="font-family: 'Syne', sans-serif; font-weight: 700; color: var(--primary); margin-bottom: 20px;">Log Today's Shift</h3>
+        <form method="post" action="{% url 'log_shift' %}">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label">Hours worked today</label>
+            <input type="number" step="0.5" name="hours_worked" class="form-control" placeholder="e.g. 8" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Earnings today (₦)</label>
+            <input type="number" name="earnings_today" class="form-control" placeholder="e.g. 5000" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">What did you do today?</label>
+            <textarea name="job_description" class="form-control" rows="3" placeholder="Describe your work..." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-shift">Log Shift</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- This Week's Shifts -->
+    <div class="col-lg-7">
+      <div class="table-card">
+        <h3 style="font-family: 'Syne', sans-serif; font-weight: 700; color: var(--primary); margin-bottom: 20px;">This Week's Shifts</h3>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Hours</th>
+                <th>Earnings</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for shift in recent_shifts %}
+              <tr>
+                <td>{{ shift.date|date:"M d" }}</td>
+                <td>{{ shift.hours_worked }}</td>
+                <td>₦{{ shift.earnings_today|floatformat:0 }}</td>
+                <td>{{ shift.job_description|truncatewords:5 }}</td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="4" class="text-center text-muted">No shifts logged yet</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+            <tfoot>
+              <tr style="background: rgba(10, 102, 64, 0.05);">
+                <th>Total</th>
+                <th>{{ total_hours|default:0 }}</th>
+                <th>₦{{ total_earnings|default:0|floatformat:0 }}</th>
+                <th></th>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <!-- Advance Eligibility -->
+    <div class="col-lg-6">
+      <div class="eligibility-card">
+        <h3 style="font-family: 'Syne', sans-serif; font-weight: 700; color: var(--primary); margin-bottom: 20px;">Advance Eligibility</h3>
+        {% if is_eligible %}
+          <div class="alert alert-success">
+            <h5 class="alert-heading">🎉 You qualify for an advance!</h5>
+            <p>Based on your trust score and earnings history, you can request up to <strong>₦{{ max_advance_amount|floatformat:0 }}</strong></p>
+            <a href="{% url 'advance_request' %}" class="btn btn-advance">Request Advance</a>
+          </div>
+        {% else %}
+          <div class="alert alert-warning">
+            <h5 class="alert-heading">Keep logging shifts to qualify</h5>
+            <p>You need:</p>
+            <ul>
+              <li>{{ shifts_needed }} more shifts (need 5 total)</li>
+              <li>Trust score of 60 (current: {{ trust_score|default:0 }})</li>
+            </ul>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Recent Advance Requests -->
+    <div class="col-lg-6">
+      <div class="table-card">
+        <h3 style="font-family: 'Syne', sans-serif; font-weight: 700; color: var(--primary); margin-bottom: 20px;">Recent Advance Requests</h3>
+        {% if recent_advances %}
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for advance in recent_advances %}
+                <tr>
+                  <td>₦{{ advance.amount_requested|floatformat:0 }}</td>
+                  <td>
+                    <span class="badge {% if advance.status == 'approved' %}badge-success{% elif advance.status == 'rejected' %}badge-danger{% elif advance.status == 'repaid' %}badge-success{% else %}badge-warning{% endif %}">
+                      {{ advance.status|title }}
+                    </span>
+                  </td>
+                  <td>{{ advance.requested_at|date:"M d" }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <p class="text-muted">No advance requests yet</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

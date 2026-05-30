@@ -25,7 +25,6 @@
         <div class="auth-logo-icon">₦</div>
         PayTrack
       </a>
-      <span class="auth-nav-link" style="cursor:default">Step 2 of 2 — Verify email</span>
     </div>
   </nav>
 
@@ -39,55 +38,41 @@
       <!-- Header -->
       <h1 class="auth-card-title">Check your inbox</h1>
       <p class="auth-card-sub">
-        We sent a verification link to:
+        We sent a password reset link to:
       </p>
 
       <!-- Email display -->
       <div class="email-highlight">
-        {{ user.email|default:"your email address" }}
+        {{ email|default:"your email address" }}
       </div>
 
       <p class="auth-card-sub" style="margin-bottom:24px;">
-        Click the link in that email to activate your PayTrack account. The link expires in <strong style="color:var(--white-70)">24 hours.</strong>
+        Click the link in that email to reset your password. The link expires in <strong style="color:var(--white-70)">24 hours.</strong>
       </p>
 
       <!-- Steps -->
       <ul class="auth-steps">
         <li>
           <span class="step-num-badge">1</span>
-          Open the email from <strong style="color:var(--white-70)">noreply@paytrack.ng</strong>
+          Open the email from <strong style="color:var(--white-70)">noreply@djangopilot.com</strong>
         </li>
         <li>
           <span class="step-num-badge">2</span>
-          Click "Verify my email address" in the email body
+          Click "Reset my password" in the email body
         </li>
         <li>
           <span class="step-num-badge">3</span>
-          You'll be redirected back here and signed in automatically
+          Create a new password on the reset page
         </li>
       </ul>
 
-      <!-- Divider -->
-      <div class="auth-divider" style="margin:24px 0 20px;">
-        <span>Didn't get it?</span>
-      </div>
-
-      <!-- Resend form -->
-      <form method="post" action="{% url 'resend_verification' %}">
-        {% csrf_token %}
-        <input type="hidden" name="email" value="{{ user.email|default:'' }}" />
-        <button type="submit" id="resend-btn" class="btn-auth-ghost">
-          Resend verification email
-        </button>
-      </form>
-
-      <div class="auth-alert info" style="margin-top:20px; text-align:left;">
+      <div class="auth-alert info" style="margin-top:24px; text-align:left;">
         <span class="auth-alert-icon">💡</span>
         <div>Check your spam or junk folder if you don't see it within a minute.</div>
       </div>
 
       <p class="auth-footer-text mt-0">
-        Wrong email? <a href="{% url 'register' %}">Start over</a> · <a href="{% url 'login' %}">Sign in</a>
+        Wrong email? <a href="{% url 'forgot_password' %}">Try again</a> · <a href="{% url 'login' %}">Sign in</a>
       </p>
 
     </div>

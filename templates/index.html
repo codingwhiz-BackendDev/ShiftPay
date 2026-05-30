@@ -1,650 +1,210 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PayTrack — Get Paid. Every Time.</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap"
-        rel="stylesheet" />
-    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShiftPay — Your earnings, your advance</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #0A6640;
+      --accent: #F5A623;
+      --background: #F8F9FA;
+      --text: #212529;
+      --white: #ffffff;
+    }
+    body {
+      background: var(--background);
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text);
+      margin: 0;
+      padding: 0;
+    }
+    .navbar-brand {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      color: var(--primary) !important;
+      font-size: 28px;
+    }
+    .hero {
+      background: var(--primary);
+      color: var(--white);
+      padding: 100px 0 80px;
+    }
+    .hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 48px;
+      line-height: 1.2;
+      margin-bottom: 20px;
+    }
+    .hero p {
+      font-size: 20px;
+      opacity: 0.9;
+      margin-bottom: 40px;
+    }
+    .btn-primary {
+      background: var(--accent);
+      border: none;
+      padding: 14px 32px;
+      font-weight: 600;
+      border-radius: 8px;
+      color: var(--text);
+    }
+    .btn-primary:hover {
+      background: #e69520;
+    }
+    .btn-outline-light {
+      border: 2px solid var(--white);
+      padding: 14px 32px;
+      font-weight: 600;
+      border-radius: 8px;
+      color: var(--white);
+    }
+    .btn-outline-light:hover {
+      background: var(--white);
+      color: var(--primary);
+    }
+    .features {
+      padding: 80px 0;
+    }
+    .feature-card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      height: 100%;
+      transition: transform 0.3s ease;
+    }
+    .feature-card:hover {
+      transform: translateY(-5px);
+    }
+    .feature-icon {
+      width: 60px;
+      height: 60px;
+      background: rgba(10, 102, 64, 0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+    .feature-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+    .feature-card p {
+      color: #6c757d;
+      font-size: 15px;
+    }
+    .cta {
+      background: var(--primary);
+      color: var(--white);
+      padding: 80px 0;
+      text-align: center;
+    }
+    .cta h2 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+    .footer {
+      background: var(--white);
+      padding: 40px 0;
+      text-align: center;
+      border-top: 1px solid #dee2e6;
+    }
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 32px;
+      }
+      .hero p {
+        font-size: 16px;
+      }
+    }
+  </style>
 </head>
-
 <body>
 
-    <!-- NAVBAR -->
-    <nav>
-        <div class="nav-inner">
-            <a href="#" class="nav-logo">
-                <div class="nav-logo-icon">₦</div>
-                PayTrack
-            </a>
-            <ul class="nav-links">
-                <li><a href="#features">Features</a></li>
-                <li><a href="#dashboard">Dashboard</a></li>
-                <li><a href="#how-it-works">How it works</a></li>
-                <li><a href="#pricing">Pricing</a></li>
-            </ul>
-            <div class="nav-actions">
-                <a href="#" class="btn-ghost">Sign in</a>
-                <a href="#" class="btn-primary">Get started free</a>
-            </div>
-        </div>
-    </nav>
-
-    <!-- HERO -->
-    <section class="hero">
-        <div class="orb orb-1"></div>
-        <div class="orb orb-2"></div>
-        <div class="orb orb-3"></div>
-
-        <div class="hero-grid">
-            <div class="hero-content">
-                <div class="hero-eyebrow">
-                    <span class="tag">Built for African freelancers</span>
-                </div>
-                <h1 class="hero-headline">
-                    Stop chasing.<br />
-                    Start <span class="accent">getting paid.</span>
-                </h1>
-                <p class="hero-sub">
-                    Create professional invoices, share a link, and let PayTrack automatically remind clients until the
-                    money hits your account. No more WhatsApp PDFs. No more awkward follow-ups.
-                </p>
-                <div class="hero-ctas">
-                    <a href="#" class="btn-hero">Start for free</a>
-                    <a href="#dashboard" class="btn-outline">
-                        <span>▶</span> See it in action
-                    </a>
-                </div>
-                <p class="hero-note">No credit card required. Free forever plan available.</p>
-            </div>
-
-            <div class="hero-visual">
-                <!-- Floating badge top-right -->
-                <div class="float-badge badge-1">
-                    <div class="badge-icon">💸</div>
-                    <div class="badge-val" style="color:var(--emerald)">₦842,000</div>
-                    <div class="badge-lbl">Collected this month</div>
-                </div>
-
-                <!-- Dashboard mockup -->
-                <div class="dashboard-mockup">
-                    <div class="mock-topbar">
-                        <div class="mock-dots">
-                            <span></span><span></span><span></span>
-                        </div>
-                        <div class="mock-title">PAYTRACK DASHBOARD</div>
-                        <div class="mock-avatar"></div>
-                    </div>
-
-                    <div class="mock-metrics">
-                        <div class="mock-metric">
-                            <div class="mock-metric-label">Outstanding</div>
-                            <div class="mock-metric-value blue-c">₦1.2M</div>
-                            <div class="mock-metric-sub amber">3 invoices</div>
-                        </div>
-                        <div class="mock-metric">
-                            <div class="mock-metric-label">Paid (30d)</div>
-                            <div class="mock-metric-value green">₦842K</div>
-                            <div class="mock-metric-sub green">↑ 24%</div>
-                        </div>
-                        <div class="mock-metric">
-                            <div class="mock-metric-label">Overdue</div>
-                            <div class="mock-metric-value red-c">₦340K</div>
-                            <div class="mock-metric-sub red-c">2 reminders sent</div>
-                        </div>
-                    </div>
-
-                    <div class="mock-chart-area">
-                        <div class="mock-chart-header">
-                            <span class="mock-chart-title">REVENUE — 6 MONTHS</span>
-                            <span class="mock-chart-badge">↑ 31% avg</span>
-                        </div>
-                        <div class="chart-bars">
-                            <div class="chart-bar"></div>
-                            <div class="chart-bar"></div>
-                            <div class="chart-bar"></div>
-                            <div class="chart-bar"></div>
-                            <div class="chart-bar"></div>
-                            <div class="chart-bar highlight"></div>
-                        </div>
-                    </div>
-
-                    <div class="mock-invoices">
-                        <div class="mock-invoice-row">
-                            <div>
-                                <div class="mock-inv-client">Kuda Bank Design</div>
-                                <div class="mock-inv-num">INV-024 · Due Jun 1</div>
-                            </div>
-                            <div class="mock-inv-amount">₦450,000</div>
-                            <div class="mock-status status-overdue">Overdue</div>
-                        </div>
-                        <div class="mock-invoice-row">
-                            <div>
-                                <div class="mock-inv-client">Paystack Brand</div>
-                                <div class="mock-inv-num">INV-023 · Due May 28</div>
-                            </div>
-                            <div class="mock-inv-amount">₦220,000</div>
-                            <div class="mock-status status-claimed">Claimed</div>
-                        </div>
-                        <div class="mock-invoice-row">
-                            <div>
-                                <div class="mock-inv-client">Flutterwave UX</div>
-                                <div class="mock-inv-num">INV-022 · Paid May 18</div>
-                            </div>
-                            <div class="mock-inv-amount">₦380,000</div>
-                            <div class="mock-status status-paid">Paid ✓</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Floating badge bottom-left -->
-                <div class="float-badge badge-2">
-                    <div class="badge-icon">🔔</div>
-                    <div class="badge-val" style="color:var(--teal)">Auto-reminded</div>
-                    <div class="badge-lbl">INV-024 · 7 days overdue</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- METRICS STRIP -->
-    <div class="metrics-strip">
-        <div class="metrics-inner">
-            <div class="metric-item">
-                <div>
-                    <div class="metric-num"
-                        style="background:linear-gradient(135deg,var(--blue-light),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent">
-                        ₦4.2B+</div>
-                    <div class="metric-desc">Invoices tracked</div>
-                </div>
-            </div>
-            <div class="metric-item">
-                <div>
-                    <div class="metric-num" style="color:var(--emerald)">12,400+</div>
-                    <div class="metric-desc">Freelancers onboarded</div>
-                </div>
-            </div>
-            <div class="metric-item">
-                <div>
-                    <div class="metric-num" style="color:var(--amber)">94%</div>
-                    <div class="metric-desc">Payment collection rate</div>
-                </div>
-            </div>
-            <div class="metric-item">
-                <div>
-                    <div class="metric-num" style="color:var(--blue-light)">3.4 days</div>
-                    <div class="metric-desc">Avg time to payment</div>
-                </div>
-            </div>
-            <div class="metric-item">
-                <div>
-                    <div class="metric-num" style="color:var(--white-70)">98.9%</div>
-                    <div class="metric-desc">Platform uptime</div>
-                </div>
-            </div>
-            <!-- Duplicate for seamless loop -->
-            <div class="metric-item">
-                <div>
-                    <div class="metric-num"
-                        style="background:linear-gradient(135deg,var(--blue-light),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent">
-                        ₦4.2B+</div>
-                    <div class="metric-desc">Invoices tracked</div>
-                </div>
-            </div>
-            <div class="metric-item">
-                <div>
-                    <div class="metric-num" style="color:var(--emerald)">12,400+</div>
-                    <div class="metric-desc">Freelancers onboarded</div>
-                </div>
-            </div>
-            <div class="metric-item">
-                <div>
-                    <div class="metric-num" style="color:var(--amber)">94%</div>
-                    <div class="metric-desc">Payment collection rate</div>
-                </div>
-            </div>
-            <div class="metric-item">
-                <div>
-                    <div class="metric-num" style="color:var(--blue-light)">3.4 days</div>
-                    <div class="metric-desc">Avg time to payment</div>
-                </div>
-            </div>
-            <div class="metric-item">
-                <div>
-                    <div class="metric-num" style="color:var(--white-70)">98.9%</div>
-                    <div class="metric-desc">Platform uptime</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- FEATURES -->
-    <section class="features" id="features">
-        <div class="container">
-            <div class="section-header reveal">
-                <span class="tag">Everything you need</span>
-                <h2 class="section-title">Built for the way freelancers<br />actually work in Nigeria</h2>
-                <p class="section-sub">No accounting degree required. No confusing dashboards. Just send, track, and get
-                    paid.</p>
-            </div>
-
-            <div class="features-grid">
-                <div class="feature-card featured reveal reveal-delay-1">
-                    <div class="feat-icon" style="background:rgba(37,99,235,0.15)">🔗</div>
-                    <div class="feat-name">Public Invoice Links</div>
-                    <div class="feat-desc">Every invoice gets a unique URL your client can open without an account. They
-                        see exactly what they owe, your bank details, and a "I have paid" button. No more PDF
-                        attachments getting lost in email.</div>
-                    <a href="#" class="feat-link">See how it works →</a>
-                </div>
-
-                <div class="feature-card reveal reveal-delay-2">
-                    <div class="feat-icon" style="background:rgba(245,158,11,0.12)">🔔</div>
-                    <div class="feat-name">Automatic Reminders</div>
-                    <div class="feat-desc">PayTrack watches your due dates 24/7 and sends polite reminder emails at 3,
-                        7, and 14 days overdue — so you never have to send an awkward "just checking in" message again.
-                    </div>
-                    <a href="#" class="feat-link">Learn more →</a>
-                </div>
-
-                <div class="feature-card reveal reveal-delay-3">
-                    <div class="feat-icon" style="background:rgba(16,185,129,0.12)">📄</div>
-                    <div class="feat-name">PDF Invoice Download</div>
-                    <div class="feat-desc">Generate a professional, branded PDF invoice in one click. Send it via
-                        WhatsApp, email, or let clients download it directly from their invoice link. Looks like it cost
-                        you ₦50k to design.</div>
-                    <a href="#" class="feat-link">See sample →</a>
-                </div>
-
-                <div class="feature-card reveal reveal-delay-1">
-                    <div class="feat-icon" style="background:rgba(14,165,233,0.12)">📊</div>
-                    <div class="feat-name">Financial Dashboard</div>
-                    <div class="feat-desc">See exactly how much you're owed, how much you've earned, and which clients
-                        are overdue — all at a glance. Income charts, overdue alerts, and client rankings updated in
-                        real time.</div>
-                    <a href="#" class="feat-link">See dashboard →</a>
-                </div>
-
-                <div class="feature-card reveal reveal-delay-2">
-                    <div class="feat-icon" style="background:rgba(139,92,246,0.12)">👥</div>
-                    <div class="feat-name">Client Management</div>
-                    <div class="feat-desc">Store your clients once. Their name, email, company, and phone auto-fill on
-                        every invoice you create for them. Track payment history per client and spot your fastest
-                        payers.</div>
-                    <a href="#" class="feat-link">Explore →</a>
-                </div>
-
-                <div class="feature-card reveal reveal-delay-3">
-                    <div class="feat-icon" style="background:rgba(239,68,68,0.12)">✅</div>
-                    <div class="feat-name">Payment Confirmation</div>
-                    <div class="feat-desc">When a client marks payment done, you get an instant email alert. Verify in
-                        your bank app, then confirm with one click on your dashboard. Clean audit trail of every payment
-                        ever made.</div>
-                    <a href="#" class="feat-link">See the flow →</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- DASHBOARD PREVIEW -->
-    <section class="dash-preview" id="dashboard">
-        <div class="container">
-            <div class="section-header reveal">
-                <span class="tag">Live preview</span>
-                <h2 class="section-title">Your financial command centre</h2>
-                <p class="section-sub">One screen. Everything you need to know about who owes you money and when you'll
-                    get it.</p>
-            </div>
-
-            <div class="dash-frame reveal">
-                <div class="dash-titlebar">
-                    <div class="dash-dots"><span></span><span></span><span></span></div>
-                    <div class="dash-url">app.paytrack.ng/dashboard</div>
-                </div>
-
-                <div class="dash-layout">
-                    <div class="dash-sidebar">
-                        <div class="dash-sidebar-logo">PayTrack</div>
-                        <div class="dash-nav-item active"><span class="dash-nav-icon">⊞</span> Dashboard</div>
-                        <div class="dash-nav-item"><span class="dash-nav-icon">📄</span> Invoices</div>
-                        <div class="dash-nav-item"><span class="dash-nav-icon">👥</span> Clients</div>
-                        <div class="dash-nav-item"><span class="dash-nav-icon">🔔</span> Reminders</div>
-                        <div class="dash-nav-item"><span class="dash-nav-icon">📊</span> Analytics</div>
-                        <div class="dash-nav-item" style="margin-top:auto"><span class="dash-nav-icon">⚙</span> Settings
-                        </div>
-                    </div>
-
-                    <div class="dash-main">
-                        <div class="dash-main-header">
-                            <div class="dash-main-title">Good morning, Tunde 👋</div>
-                            <button class="dash-main-btn">+ New Invoice</button>
-                        </div>
-
-                        <div class="dash-kpis">
-                            <div class="kpi-card">
-                                <div class="kpi-label">Total Outstanding</div>
-                                <div class="kpi-val" style="color:var(--blue-light)">₦1.24M</div>
-                                <div class="kpi-change"><span class="kpi-down">▼ 3 invoices unpaid</span></div>
-                            </div>
-                            <div class="kpi-card">
-                                <div class="kpi-label">Paid This Month</div>
-                                <div class="kpi-val" style="color:var(--emerald)">₦842K</div>
-                                <div class="kpi-change"><span class="kpi-up">↑ 24% vs last month</span></div>
-                            </div>
-                            <div class="kpi-card">
-                                <div class="kpi-label">Overdue</div>
-                                <div class="kpi-val" style="color:var(--red)">₦340K</div>
-                                <div class="kpi-change" style="color:var(--amber)">⚠ 2 need action</div>
-                            </div>
-                            <div class="kpi-card">
-                                <div class="kpi-label">Avg Days to Pay</div>
-                                <div class="kpi-val" style="color:var(--white)">8.3</div>
-                                <div class="kpi-change"><span class="kpi-up">↑ improved from 12</span></div>
-                            </div>
-                        </div>
-
-                        <div class="dash-bottom">
-                            <div class="dash-panel">
-                                <div class="panel-title">Revenue (6 months) <span>May 2025 → now</span></div>
-                                <div class="big-chart">
-                                    <div class="big-bar"></div>
-                                    <div class="big-bar"></div>
-                                    <div class="big-bar"></div>
-                                    <div class="big-bar"></div>
-                                    <div class="big-bar"></div>
-                                    <div class="big-bar"></div>
-                                    <div class="big-bar"></div>
-                                </div>
-                            </div>
-
-                            <div class="dash-panel">
-                                <div class="panel-title">Recent Invoices <span>View all →</span></div>
-                                <div class="table-row">
-                                    <div class="tr-avatar"
-                                        style="background:rgba(37,99,235,0.2);color:var(--blue-light)">KO</div>
-                                    <div class="tr-info">
-                                        <div class="tr-name">Kuda Online</div>
-                                        <div class="tr-inv">INV-024 · Jun 1, 2025</div>
-                                    </div>
-                                    <div class="tr-amount amber">₦450,000</div>
-                                    <div class="tr-status status-overdue">Overdue</div>
-                                </div>
-                                <div class="table-row">
-                                    <div class="tr-avatar" style="background:rgba(14,165,233,0.2);color:var(--teal)">PS
-                                    </div>
-                                    <div class="tr-info">
-                                        <div class="tr-name">Paystack</div>
-                                        <div class="tr-inv">INV-023 · May 28, 2025</div>
-                                    </div>
-                                    <div class="tr-amount" style="color:var(--teal)">₦220,000</div>
-                                    <div class="tr-status status-claimed">Claimed</div>
-                                </div>
-                                <div class="table-row">
-                                    <div class="tr-avatar" style="background:rgba(16,185,129,0.2);color:var(--emerald)">
-                                        FW</div>
-                                    <div class="tr-info">
-                                        <div class="tr-name">Flutterwave</div>
-                                        <div class="tr-inv">INV-022 · May 18, 2025</div>
-                                    </div>
-                                    <div class="tr-amount green">₦380,000</div>
-                                    <div class="tr-status status-paid">Paid ✓</div>
-                                </div>
-                                <div class="table-row">
-                                    <div class="tr-avatar" style="background:rgba(139,92,246,0.2);color:#a78bfa">CB
-                                    </div>
-                                    <div class="tr-info">
-                                        <div class="tr-name">Carbon Bank</div>
-                                        <div class="tr-inv">INV-021 · May 10, 2025</div>
-                                    </div>
-                                    <div class="tr-amount green">₦175,000</div>
-                                    <div class="tr-status status-paid">Paid ✓</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- HOW IT WORKS -->
-    <section class="hiw" id="how-it-works">
-        <div class="container">
-            <div class="section-header reveal">
-                <span class="tag">Simple process</span>
-                <h2 class="section-title">From invoice to payment<br />in four steps</h2>
-                <p class="section-sub">Less than 3 minutes to create your first invoice and get paid faster than ever
-                    before.</p>
-            </div>
-
-            <div class="hiw-steps">
-                <div class="step-card reveal reveal-delay-1">
-                    <div class="step-num">1</div>
-                    <div class="step-title">Create your invoice</div>
-                    <div class="step-desc">Select a client, add your line items, set a due date, and click send.
-                        PayTrack auto-generates a professional invoice number and fills in your bank details.</div>
-                </div>
-                <div class="step-card reveal reveal-delay-2">
-                    <div class="step-num">2</div>
-                    <div class="step-title">Share the link</div>
-                    <div class="step-desc">Copy the unique public URL and send it anywhere — WhatsApp, email, DM, SMS.
-                        Your client opens it in any browser, no login needed, and sees exactly what they owe.</div>
-                </div>
-                <div class="step-card reveal reveal-delay-3">
-                    <div class="step-num">3</div>
-                    <div class="step-title">Reminders run on autopilot</div>
-                    <div class="step-desc">If your client goes quiet, PayTrack sends polite automatic reminders at 3, 7,
-                        and 14 days overdue. You focus on work. The system does the chasing.</div>
-                </div>
-                <div class="step-card reveal reveal-delay-4">
-                    <div class="step-num">4</div>
-                    <div class="step-title">Confirm and close</div>
-                    <div class="step-desc">Client clicks "I have paid." You get an email alert, verify in your bank app,
-                        and click confirm on your dashboard. Invoice closed. Money tracked. Done.</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- TESTIMONIALS -->
-    <section class="testimonials">
-        <div class="container">
-            <div class="section-header reveal">
-                <span class="tag">Real freelancers</span>
-                <h2 class="section-title">They stopped chasing.<br />You should too.</h2>
-            </div>
-
-            <div class="testi-grid">
-                <div class="testi-card reveal reveal-delay-1">
-                    <div class="testi-stars">★★★★★</div>
-                    <div class="testi-text">"I used to spend every Friday sending awkward WhatsApp messages to clients
-                        about unpaid invoices. With PayTrack, the reminders just go out automatically and clients
-                        actually pay. I collected ₦680k last month that would have taken 3 more weeks."</div>
-                    <div class="testi-author">
-                        <div class="testi-avatar" style="background:linear-gradient(135deg,#2563eb,#0ea5e9)">AO</div>
-                        <div>
-                            <div class="testi-name">Adaeze Okonkwo</div>
-                            <div class="testi-role">UI/UX Designer, Lagos</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="testi-card reveal reveal-delay-2">
-                    <div class="testi-stars">★★★★★</div>
-                    <div class="testi-text">"The public invoice link is the best feature. I send clients a link, they
-                        see a professional page with my bank details, and half of them pay the same day. Before PayTrack
-                        I was sending Canva PDFs on WhatsApp. Night and day difference."</div>
-                    <div class="testi-author">
-                        <div class="testi-avatar" style="background:linear-gradient(135deg,#10b981,#0ea5e9)">TF</div>
-                        <div>
-                            <div class="testi-name">Taiwo Fasanya</div>
-                            <div class="testi-role">Freelance Developer, Abuja</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="testi-card reveal reveal-delay-3">
-                    <div class="testi-stars">★★★★★</div>
-                    <div class="testi-text">"My clients think I have a full accounting team now. The invoices look so
-                        professional and I can see at a glance who owes me what. I've referred every freelancer I know.
-                        This is the tool we've always needed in Nigeria."</div>
-                    <div class="testi-author">
-                        <div class="testi-avatar" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">CI</div>
-                        <div>
-                            <div class="testi-name">Chioma Ikenna</div>
-                            <div class="testi-role">Brand Strategist, Port Harcourt</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- PRICING -->
-    <!-- <section class="pricing" id="pricing">
+<nav class="navbar navbar-expand-lg navbar-light bg-white">
   <div class="container">
-    <div class="section-header reveal">
-      <span class="tag">Simple pricing</span>
-      <h2 class="section-title">Start free. Scale as you grow.</h2>
-      <p class="section-sub">No hidden fees. No percentage cuts from your invoices. Just a flat monthly rate that makes sense.</p>
+    <a class="navbar-brand" href="#">ShiftPay</a>
+    <div class="navbar-nav ms-auto">
+      <a class="nav-link me-3" href="{% url 'login' %}">Sign in</a>
+      <a class="btn btn-primary" href="{% url 'register' %}">Start logging shifts</a>
     </div>
+  </div>
+</nav>
 
-    <div class="pricing-grid reveal">
-      <div class="price-card">
-        <span class="plan-badge">Starter</span>
-        <div class="plan-name">Free</div>
-        <div class="plan-price"><sup>₦</sup>0<span class="mo">/mo</span></div>
-        <div class="plan-desc">Perfect to get started and try everything.</div>
-        <ul class="plan-features">
-          <li>Up to 5 invoices/month</li>
-          <li>Public invoice links</li>
-          <li>PDF downloads</li>
-          <li>Client management (3 clients)</li>
-          <li>Manual reminders only</li>
-        </ul>
-        <button class="plan-cta">Get started free</button>
-      </div>
-
-      <div class="price-card featured-plan">
-        <span class="plan-badge plan-popular">Most Popular</span>
-        <div class="plan-name">Pro</div>
-        <div class="plan-price"><sup>₦</sup>4,900<span class="mo">/mo</span></div>
-        <div class="plan-desc">For active freelancers serious about getting paid.</div>
-        <ul class="plan-features">
-          <li>Unlimited invoices</li>
-          <li>Automatic reminders (3, 7, 14 days)</li>
-          <li>Unlimited clients</li>
-          <li>Revenue analytics dashboard</li>
-          <li>Email notifications on payment</li>
-          <li>Priority support</li>
-        </ul>
-        <button class="plan-cta cta-primary">Start Pro — 14 days free</button>
-      </div>
-
-      <div class="price-card">
-        <span class="plan-badge">Business</span>
-        <div class="plan-name">Agency</div>
-        <div class="plan-price"><sup>₦</sup>14,900<span class="mo">/mo</span></div>
-        <div class="plan-desc">For studios and agencies billing multiple clients.</div>
-        <ul class="plan-features">
-          <li>Everything in Pro</li>
-          <li>Team member accounts (5 seats)</li>
-          <li>Custom branding on invoices</li>
-          <li>Multi-currency support</li>
-          <li>Bulk invoice export</li>
-          <li>Dedicated account manager</li>
-        </ul>
-        <button class="plan-cta">Contact sales</button>
+<section class="hero">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6">
+        <h1>Get paid today.<br>Not next week.</h1>
+        <p>ShiftPay gives Nigerian gig workers instant salary advances based on their real earnings history. No bank. No loan shark. No stress.</p>
+        <div class="d-flex gap-3 flex-wrap">
+          <a href="{% url 'register' %}" class="btn btn-primary">Start logging shifts</a>
+          <a href="{% url 'login' %}" class="btn btn-outline-light">Sign in</a>
+        </div>
       </div>
     </div>
   </div>
-</section> -->
+</section>
 
-    <!-- FINAL CTA -->
-    <section class="final-cta">
-        <div class="container">
-            <h2 class="final-cta-title">
-                Your next invoice<br />
-                <span
-                    style="background:linear-gradient(135deg,var(--blue-light),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent">deserves
-                    to get paid.</span>
-            </h2>
-            <p class="final-cta-sub">Join thousands of Nigerian freelancers who stopped chasing clients and started
-                building businesses.</p>
-            <div class="final-btns">
-                <a href="#" class="btn-hero">Create your first invoice — free</a>
-                <a href="#" class="btn-outline">Book a demo</a>
-            </div>
-            <p style="margin-top:20px;font-size:13px;color:var(--white-40)">No card required · Set up in under 3 minutes
-                · Cancel anytime</p>
+<section class="features">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 style="font-family: 'Syne', sans-serif; font-weight: 700; color: var(--primary); font-size: 32px;">How it works</h2>
+      <p style="color: #6c757d; font-size: 18px;">Three simple steps to get your advance</p>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon">📝</div>
+          <h3>Log your shifts</h3>
+          <p>Track your daily work and earnings to build your work history</p>
         </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer>
-        <div class="container">
-            <div class="footer-grid">
-                <div>
-                    <div
-                        style="display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-size:20px;font-weight:700;">
-                        <div
-                            style="width:32px;height:32px;background:linear-gradient(135deg,var(--blue-glow),var(--teal));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;">
-                            ₦</div>
-                        <!-- FOOTER LOGO PLACEHOLDER -->
-                        <!-- <img src="{% static 'YOUR_LOGO.png' %}" alt="PayTrack" style="height:28px;width:auto;" /> -->
-                        PayTrack
-                    </div>
-                    <p class="footer-brand-desc">The invoice and payment tracking platform built for African
-                        freelancers. Stop chasing. Start earning.</p>
-                </div>
-                <div>
-                    <div class="footer-col-title">Product</div>
-                    <ul class="footer-links">
-                        <li><a href="#">Features</a></li>
-                        <li><a href="#">Pricing</a></li>
-                        <li><a href="#">Changelog</a></li>
-                        <li><a href="#">Roadmap</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <div class="footer-col-title">Resources</div>
-                    <ul class="footer-links">
-                        <li><a href="#">Documentation</a></li>
-                        <li><a href="#">Blog</a></li>
-                        <li><a href="#">Help Center</a></li>
-                        <li><a href="#">Status</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <div class="footer-col-title">Company</div>
-                    <ul class="footer-links">
-                        <li><a href="#">About</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Terms of Service</a></li>
-                        <li><a href="#">Contact</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <div class="footer-copy">© 2026 PayTrack. Made with ♥ for Nigerian freelancers.</div>
-                <div class="footer-socials">
-                    <a href="#" class="social-link">𝕏</a>
-                    <a href="#" class="social-link">in</a>
-                    <a href="#" class="social-link">ig</a>
-                </div>
-            </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3>Build your score</h3>
+          <p>Our AI analyzes your consistency and earnings to calculate your trust score</p>
         </div>
-    </footer>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon">💰</div>
+          <h3>Get your advance</h3>
+          <p>Request instant salary advances based on your verified earnings</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <script src="{% static 'js/index.js' %}">
+<section class="cta">
+  <div class="container">
+    <h2>Ready to access your earnings?</h2>
+    <p style="font-size: 18px; opacity: 0.9; margin-bottom: 30px;">Join thousands of Nigerian gig workers using ShiftPay</p>
+    <a href="{% url 'register' %}" class="btn btn-primary" style="background: var(--white); color: var(--primary);">Create free account</a>
+  </div>
+</section>
 
-    </script>
+<footer class="footer">
+  <div class="container">
+    <p style="color: #6c757d;">© 2025 ShiftPay. Your earnings, your advance.</p>
+  </div>
+</footer>
+
 </body>
-
 </html>
