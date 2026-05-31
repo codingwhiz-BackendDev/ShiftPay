@@ -2,209 +2,256 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ShiftPay — Your earnings, your advance</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --primary: #0A6640;
-      --accent: #F5A623;
-      --background: #F8F9FA;
-      --text: #212529;
-      --white: #ffffff;
-    }
-    body {
-      background: var(--background);
-      font-family: 'DM Sans', sans-serif;
-      color: var(--text);
-      margin: 0;
-      padding: 0;
-    }
-    .navbar-brand {
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      color: var(--primary) !important;
-      font-size: 28px;
-    }
-    .hero {
-      background: var(--primary);
-      color: var(--white);
-      padding: 100px 0 80px;
-    }
-    .hero h1 {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      font-size: 48px;
-      line-height: 1.2;
-      margin-bottom: 20px;
-    }
-    .hero p {
-      font-size: 20px;
-      opacity: 0.9;
-      margin-bottom: 40px;
-    }
-    .btn-primary {
-      background: var(--accent);
-      border: none;
-      padding: 14px 32px;
-      font-weight: 600;
-      border-radius: 8px;
-      color: var(--text);
-    }
-    .btn-primary:hover {
-      background: #e69520;
-    }
-    .btn-outline-light {
-      border: 2px solid var(--white);
-      padding: 14px 32px;
-      font-weight: 600;
-      border-radius: 8px;
-      color: var(--white);
-    }
-    .btn-outline-light:hover {
-      background: var(--white);
-      color: var(--primary);
-    }
-    .features {
-      padding: 80px 0;
-    }
-    .feature-card {
-      background: var(--white);
-      border-radius: 16px;
-      padding: 30px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-      height: 100%;
-      transition: transform 0.3s ease;
-    }
-    .feature-card:hover {
-      transform: translateY(-5px);
-    }
-    .feature-icon {
-      width: 60px;
-      height: 60px;
-      background: rgba(10, 102, 64, 0.1);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 28px;
-      margin-bottom: 20px;
-    }
-    .feature-card h3 {
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      color: var(--primary);
-      font-size: 20px;
-      margin-bottom: 10px;
-    }
-    .feature-card p {
-      color: #6c757d;
-      font-size: 15px;
-    }
-    .cta {
-      background: var(--primary);
-      color: var(--white);
-      padding: 80px 0;
-      text-align: center;
-    }
-    .cta h2 {
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      font-size: 36px;
-      margin-bottom: 20px;
-    }
-    .footer {
-      background: var(--white);
-      padding: 40px 0;
-      text-align: center;
-      border-top: 1px solid #dee2e6;
-    }
-    @media (max-width: 768px) {
-      .hero h1 {
-        font-size: 32px;
-      }
-      .hero p {
-        font-size: 16px;
-      }
-    }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ShiftPay — Your earnings. Your advance. Your power.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<link rel="stylesheet" href="{% static 'css/index.css' %}"> 
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-white">
-  <div class="container">
-    <a class="navbar-brand" href="#">ShiftPay</a>
-    <div class="navbar-nav ms-auto">
-      <a class="nav-link me-3" href="{% url 'login' %}">Sign in</a>
-      <a class="btn btn-primary" href="{% url 'register' %}">Start logging shifts</a>
+<!-- NAVBAR -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="#" class="nav-brand"><span class="bolt">⚡</span> ShiftPay</a>
+    <div class="nav-links">
+      <a href="#how-it-works">How it works</a>
+      <a href="#features">Features</a>
+      <a href="/register/" class="btn-nav">Get Started</a>
     </div>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+<div id="mobile-menu">
+  <a href="#how-it-works">How it works</a>
+  <a href="#features">Features</a>
+  <a href="/register/" class="btn-mobile">Get Started →</a>
+</div>
 
-<section class="hero">
-  <div class="container">
-    <div class="row align-items-center">
-      <div class="col-lg-6">
-        <h1>Get paid today.<br>Not next week.</h1>
-        <p>ShiftPay gives Nigerian gig workers instant salary advances based on their real earnings history. No bank. No loan shark. No stress.</p>
-        <div class="d-flex gap-3 flex-wrap">
-          <a href="{% url 'register' %}" class="btn btn-primary">Start logging shifts</a>
-          <a href="{% url 'login' %}" class="btn btn-outline-light">Sign in</a>
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-blobs">
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <div class="blob blob3"></div>
+    <div class="blob blob4"></div>
+  </div>
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-badge">⚡ AI-Powered Salary Advances — Live Now</div>
+      <h1 class="hero-h1" id="hero-h1">
+        <span class="hero-line1" id="line1"></span>
+        <span class="hero-line2" id="line2"></span>
+      </h1>
+      <p class="hero-sub">ShiftPay gives Nigerian gig workers instant salary advances based on verified earnings history. No bank. No loan shark. No stress.</p>
+      <div class="hero-ctas">
+        <a href="/register/" class="btn-primary">Start Earning Advances →</a>
+        <a href="/login/" class="btn-secondary">Sign In</a>
+      </div>
+      <p class="hero-trust">🔒 No bank required <span>·</span> ⚡ Decision in seconds <span>·</span> 💚 10% flat fee only</p>
+    </div>
+    <div class="phone-wrap">
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="phone-header">
+            <div class="phone-logo">⚡ ShiftPay</div>
+            <div class="phone-avatar">EO</div>
+          </div>
+          <div class="stat-row">
+            <div class="stat-mini"><div class="sv">8</div><div class="sl">Shifts</div></div>
+            <div class="stat-mini"><div class="sv">₦68K</div><div class="sl">Earned</div></div>
+            <div class="stat-mini"><div class="sv" id="trust-val">0</div><div class="sl">Trust</div></div>
+          </div>
+          <div class="progress-card">
+            <div class="progress-label"><span>Trust Score</span><span id="prog-pct">0%</span></div>
+            <div class="progress-track"><div class="progress-fill" id="prog-fill"></div></div>
+          </div>
+          <div class="approved-card">
+            <div class="approved-text">APPROVED ✓</div>
+            <div class="approved-sub">₦15,000 advance ready</div>
+          </div>
+          <div class="ai-card">
+            <div class="ai-label">⚡ AI DECISION</div>
+            <div id="phone-ai-text"></div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="features">
-  <div class="container">
-    <div class="text-center mb-5">
-      <h2 style="font-family: 'Syne', sans-serif; font-weight: 700; color: var(--primary); font-size: 32px;">How it works</h2>
-      <p style="color: #6c757d; font-size: 18px;">Three simple steps to get your advance</p>
+<!-- TICKER -->
+<div id="ticker">
+  <div class="ticker-track" id="ticker-track"></div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section id="how-it-works">
+  <div class="section-inner">
+    <div class="text-center">
+      <span class="section-tag">Process</span>
+      <h2 class="section-title">Three steps to your advance</h2>
+      <p class="section-sub">From zero to funded in under 10 minutes</p>
     </div>
-    <div class="row g-4">
-      <div class="col-md-4">
-        <div class="feature-card">
-          <div class="feature-icon">📝</div>
-          <h3>Log your shifts</h3>
-          <p>Track your daily work and earnings to build your work history</p>
+    <div class="steps-grid">
+      <div class="step-card" data-delay="0">
+        <div class="step-num">01</div>
+        <div class="step-icon">📅</div>
+        <div class="step-title">Log Your Shifts</div>
+        <p class="step-desc">Track daily hours and earnings in seconds. The more you log, the stronger your profile.</p>
+        <div class="step-arrow">
+          <svg viewBox="0 0 40 24" fill="none"><path d="M0 12 H32 M22 4 L34 12 L22 20" stroke="#F5A623" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="feature-card">
-          <div class="feature-icon">📊</div>
-          <h3>Build your score</h3>
-          <p>Our AI analyzes your consistency and earnings to calculate your trust score</p>
+      <div class="step-card" data-delay="150">
+        <div class="step-num">02</div>
+        <div class="step-icon">📈</div>
+        <div class="step-title">Build Your Trust Score</div>
+        <p class="step-desc">Our AI watches your earning patterns and builds a verified trust score — your new credit score.</p>
+        <div class="step-arrow">
+          <svg viewBox="0 0 40 24" fill="none"><path d="M0 12 H32 M22 4 L34 12 L22 20" stroke="#F5A623" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="feature-card">
-          <div class="feature-icon">💰</div>
-          <h3>Get your advance</h3>
-          <p>Request instant salary advances based on your verified earnings</p>
+      <div class="step-card" data-delay="300">
+        <div class="step-num">03</div>
+        <div class="step-icon">💸</div>
+        <div class="step-title">Get Your Advance</div>
+        <p class="step-desc">Request an advance and get an AI decision instantly. Funds to OPay or PalmPay in minutes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEMO -->
+<section id="demo">
+  <div class="section-inner">
+    <div class="text-center">
+      <span class="section-tag">Live Demo</span>
+      <h2 class="section-title">Watch AI decide in real time</h2>
+      <p class="section-sub">This is exactly what happens when a worker requests an advance</p>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="dot dot-r"></div>
+        <div class="dot dot-y"></div>
+        <div class="dot dot-g"></div>
+        <span style="margin-left:8px;font-size:13px;color:var(--dim)">shiftpay — AI Decision Engine v2.1</span>
+      </div>
+      <div class="terminal-body" id="terminal-body">
+        <span class="t-line" id="tl1"><span class="t-prompt">›</span> <span class="t-key">Worker:</span> <span class="t-val">Emeka Okafor — Bolt Driver</span></span>
+        <span class="t-line" id="tl2"><span class="t-prompt">›</span> <span class="t-key">Shifts logged:</span> <span class="t-val">8</span></span>
+        <span class="t-line" id="tl3"><span class="t-prompt">›</span> <span class="t-key">Trust score:</span> <span class="t-val">75/100</span></span>
+        <span class="t-line" id="tl4"><span class="t-prompt">›</span> <span class="t-key">Earnings (7 days):</span> <span class="t-val">₦68,400</span></span>
+        <span class="t-line" id="tl5"><span class="t-prompt">›</span> <span class="t-key">Advance requested:</span> <span class="t-val">₦15,000</span></span>
+        <div class="t-loading" id="t-loading">
+          <span style="color:var(--dim);font-size:13px">› Analyzing earnings pattern...</span>
+          <div class="t-bar-track"><div class="t-bar-fill" id="t-bar"></div></div>
+        </div>
+        <span class="t-approved" id="t-approved">APPROVED ✓</span>
+        <span class="t-reason" id="t-reason"></span>
+        <div class="t-results" id="t-results">
+          <div class="t-card-g">💚 Sending to OPay ···4521<br>within 5 minutes</div>
+          <div class="t-card-a">📋 Repay ₦16,500 over 14 days<br>· ₦1,179/day</div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="cta">
-  <div class="container">
-    <h2>Ready to access your earnings?</h2>
-    <p style="font-size: 18px; opacity: 0.9; margin-bottom: 30px;">Join thousands of Nigerian gig workers using ShiftPay</p>
-    <a href="{% url 'register' %}" class="btn btn-primary" style="background: var(--white); color: var(--primary);">Create free account</a>
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-inner">
+    <div class="text-center">
+      <span class="section-tag">Features</span>
+      <h2 class="section-title">Everything built for the hustle</h2>
+      <p class="section-sub">Every feature designed for Nigeria's gig economy</p>
+    </div>
+    <div class="features-grid">
+      <div class="feat-card" data-delay="0">
+        <div class="feat-icon fi-indigo">🤖</div>
+        <div class="feat-title">Gemini AI Decisions</div>
+        <p class="feat-desc">Instant approve or reject with human reasoning. No black box, no bias — just data.</p>
+      </div>
+      <div class="feat-card" data-delay="100">
+        <div class="feat-icon fi-green">📊</div>
+        <div class="feat-title">Smart Trust Score</div>
+        <p class="feat-desc">Your consistency is your credit score. No bank needed. No gatekeeping.</p>
+      </div>
+      <div class="feat-card" data-delay="200">
+        <div class="feat-icon fi-gold">💸</div>
+        <div class="feat-title">Multiple Payout Options</div>
+        <p class="feat-desc">OPay, PalmPay, Bank Transfer, or Cash Agent. Money where you need it.</p>
+      </div>
+      <div class="feat-card" data-delay="300">
+        <div class="feat-icon fi-teal">📅</div>
+        <div class="feat-title">14-Day Repayment</div>
+        <p class="feat-desc">10% flat fee. No hidden charges. No surprises. Ever. That's the deal.</p>
+      </div>
+      <div class="feat-card" data-delay="400">
+        <div class="feat-icon fi-red">🔥</div>
+        <div class="feat-title">Earnings Streaks</div>
+        <p class="feat-desc">Log every day, build your streak, unlock bigger advances. Consistency rewarded.</p>
+      </div>
+      <div class="feat-card" data-delay="500">
+        <div class="feat-icon fi-purple">📈</div>
+        <div class="feat-title">AI Earnings Insights</div>
+        <p class="feat-desc">Daily personalized tips to help you earn more and level up your trust score.</p>
+      </div>
+    </div>
   </div>
 </section>
 
-<footer class="footer">
-  <div class="container">
-    <p style="color: #6c757d;">© 2025 ShiftPay. Your earnings, your advance.</p>
+<!-- STATS -->
+<section id="stats">
+  <div class="section-inner">
+    <div class="stats-inner">
+      <div class="stat-block" data-delay="0">
+        <div class="stat-big" id="stat1">₦0</div>
+        <div class="stat-label">Advanced to workers</div>
+      </div>
+      <div class="stat-block" data-delay="200">
+        <div class="stat-big" id="stat2">0</div>
+        <div class="stat-label">Gig workers registered</div>
+      </div>
+      <div class="stat-block" data-delay="400">
+        <div class="stat-big" id="stat3">0s</div>
+        <div class="stat-label">Average AI decision time</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta-section">
+  <canvas id="particles-canvas"></canvas>
+  <div class="section-inner">
+    <h2 class="cta-title">Ready to get your advance?</h2>
+    <p class="cta-sub">Join 1,200+ gig workers already on ShiftPay</p>
+    <a href="/register/" class="btn-cta">Start for free →</a>
+    <p class="cta-note">No bank account required</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-row1">
+      <span class="footer-text" style="font-size:16px;font-weight:700;color:var(--muted)">⚡ ShiftPay</span>
+      <span class="footer-text">Built for the #BuildQuik Challenge</span>
+      <span class="footer-text">Powered by QuikDB + Gemini AI</span>
+    </div>
+    <div class="footer-row2">
+      <span class="footer-text">© 2026 ShiftPay · Built in Lagos 🇳🇬</span>
+    </div>
   </div>
 </footer>
 
+  <script src="{% static 'js/index.js' %}"></script>
 </body>
 </html>

@@ -1,16 +1,18 @@
-# PayTrack - Invoice Tracking System
+# ShiftPay — AI-Powered Salary Advances for Nigerian Gig Workers
 
-A modern Django-based invoice tracking application that helps freelancers and small businesses manage their invoices, track payments, and get paid faster.
+ShiftPay is a Django-based platform that provides instant salary advances to Nigerian gig workers using AI-powered trust scoring. Workers can log their shifts, build a trust score, and receive advances based on their earnings history — no collateral required.
 
 ## 🚀 Features
 
-- **User Authentication**: Secure registration, login, and password reset
-- **Dashboard**: Real-time overview of your financial status
-- **Invoice Management**: Create, track, and manage invoices
-- **Client Management**: Organize your clients and their payment history
-- **Payment Tracking**: Monitor outstanding, overdue, and paid invoices
-- **Analytics**: Visual insights into your revenue trends
-- **Email Notifications**: Automated reminders for overdue invoices
+- **User Authentication**: Secure registration with job type, phone number, and daily earnings
+- **Shift Logging**: Track daily work hours, earnings, and job descriptions
+- **AI Trust Score**: Machine learning-powered scoring based on shift patterns and earnings consistency
+- **Instant Advance Requests**: Request salary advances with AI-powered approval decisions
+- **Multiple Payout Methods**: OPay, PalmPay, Bank Transfer, or Cash Agent pickup
+- **Repayment Scheduling**: Automatic 14-day repayment with 10% flat fee
+- **AI Earnings Insights**: Daily personalized insights powered by Google Gemini AI
+- **Dashboard**: Real-time overview of shifts, earnings, trust score, and eligibility
+- **Mobile-First Design**: Optimized for gig workers who use smartphones
 
 ## 📋 Prerequisites
 
@@ -47,30 +49,20 @@ source venv/bin/activate
 ### Step 3: Install Dependencies
 
 ```bash
-pip install -r requirements.txt
-```
-
-If `requirements.txt` doesn't exist, install the required packages manually:
-
-```bash
-pip install django django-ratelimit
+pip install django google-generativeai python-decouple
 ```
 
 ### Step 4: Configure Environment Variables
 
-Create a `.env` file in the project root (optional but recommended):
+Create a `.env` file in the project root:
 
 ```env
 DEBUG=True
 SECRET_KEY=your-secret-key-here
-DATABASE_URL=sqlite:///db.sqlite3
-EMAIL_HOST=smtp.gmail.com
-EMAIL_PORT=587
-EMAIL_USE_TLS=True
-EMAIL_HOST_USER=your-email@gmail.com
-EMAIL_HOST_PASSWORD=your-app-password
-DEFAULT_FROM_EMAIL=noreply@paytrack.ng
+GEMINI_API_KEY=your-gemini-api-key-here
 ```
+
+**Important:** Get your Gemini API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
 
 ### Step 5: Run Migrations
 
@@ -99,10 +91,12 @@ The application will be available at: `http://127.0.0.1:8000`
 
 ## 🌐 Accessing the Application
 
-- **Home Page**: http://127.0.0.1:8000/
+- **Landing Page**: http://127.0.0.1:8000/
 - **Login**: http://127.0.0.1:8000/login/
 - **Register**: http://127.0.0.1:8000/register/
 - **Dashboard**: http://127.0.0.1:8000/dashboard/
+- **Log Shift**: http://127.0.0.1:8000/shift/log/
+- **Request Advance**: http://127.0.0.1:8000/advance/request/
 - **Admin Panel**: http://127.0.0.1:8000/admin/
 
 ## 📁 Project Structure
@@ -113,35 +107,30 @@ PayTrack/
 │   ├── __init__.py
 │   ├── admin.py              # Django admin configuration
 │   ├── apps.py               # App configuration
-│   ├── models.py             # Database models
-│   ├── tokens.py             # Token generators for email verification
+│   ├── models.py             # Database models (WorkerProfile, ShiftLog, AdvanceRequest, RepaymentSchedule)
 │   ├── urls.py               # App URL patterns
-│   └── views.py              # View functions
+│   └── views.py              # View functions (dashboard, log_shift, advance_request, AI insights)
 ├── PayTrack/                 # Project configuration directory
 │   ├── __init__.py
 │   ├── settings.py           # Django settings
 │   ├── urls.py               # Project URL patterns
 │   └── wsgi.py               # WSGI configuration
 ├── static/                   # Static files (CSS, JS, images)
-│   ├── css/
-│   │   ├── index.css         # Landing page styles
-│   │   ├── auth.css          # Authentication page styles
-│   │   └── dashboard.css     # Dashboard styles
-│   └── js/
-│       └── auth.js           # Authentication JavaScript
+│   └── css/
+│       ├── index.css         # Landing page styles
+│       ├── auth.css          # Authentication page styles
+│       └── dashboard.css     # Dashboard styles
 ├── templates/                # HTML templates
-│   ├── index.html            # Landing page
+│   ├── index.html            # ShiftPay landing page
 │   ├── login.html            # Login page
-│   ├── register.html          # Registration page
-│   ├── dashboard.html        # Dashboard page
-│   ├── forgot_password.html  # Password reset request
-│   ├── reset_password.html   # Password reset form
-│   ├── reset_email_sent.html # Reset email sent confirmation
-│   └── reset_result.html     # Password reset result
+│   ├── register.html         # Registration page with ShiftPay fields
+│   ├── dashboard.html        # Worker dashboard with AI insights
+│   ├── advance_request.html  # Advance request form with payout methods
+│   └── advance_result.html   # AI decision result page
 ├── media/                    # User-uploaded files
 ├── db.sqlite3                # SQLite database (default)
 ├── manage.py                 # Django management script
-└── requirements.txt          # Python dependencies
+└── .env                      # Environment variables (GEMINI_API_KEY)
 ```
 
 ## 🔐 Authentication System
@@ -149,20 +138,74 @@ PayTrack/
 The application includes a custom authentication system with the following features:
 
 ### Registration
-- Email-based registration
+- Email-based registration with full name
+- Job type selection (Uber/Bolt Driver, Bus Driver, Market Trader, Artisan, Delivery Rider, Other)
+- Phone number collection
+- Daily average earnings input
 - Password validation (minimum 8 characters)
-- Automatic username generation
-- Immediate account activation (no email verification required)
+- Automatic WorkerProfile creation
 
 ### Login
 - Email and password authentication
 - Session management
-- Rate limiting (10 requests per minute)
+- Redirects logged-in users to dashboard
 
-### Password Reset
-- Email-based password reset
-- Secure token-based reset links
-- 24-hour token expiration
+## 🤖 AI Features
+
+### Gemini AI Integration
+- **Advance Decision AI**: Uses Google Gemini (gemini-1.5-flash) to make instant, fair advance approval decisions
+- **Earnings Insight AI**: Generates daily personalized insights based on shift patterns and earnings data
+- **Warm, Human-like Responses**: AI is configured to speak like it understands Nigerian gig worker hustle
+
+### Trust Score Calculation
+- Base score of 50 points
+- Bonus points for total shifts logged (+10 for 3+ shifts, +15 for 5+ shifts)
+- Earnings stability bonus (within 30% of daily average)
+- Volume bonus (if earnings today > daily average)
+- Hackathon mode: No penalty for gaps between shifts (allows same-day logging)
+
+### Eligibility Requirements (Hackathon Mode)
+- **Minimum 3 shifts logged** (down from 5 for hackathon)
+- **Trust score of 50+** (down from 60 for hackathon)
+- **Max advance amount**: 50% of last 7 days earnings
+
+## 🗺️ Roadmap
+
+### Phase 1 — Manual shift logging with AI trust score
+**Status: Live Now**
+
+- Workers manually log their shifts with hours, earnings, and job descriptions
+- AI calculates trust score based on shift patterns and earnings consistency
+- Instant advance decisions powered by Gemini AI
+- Multiple payout methods (OPay, PalmPay, Bank Transfer, Cash Agent)
+- Repayment scheduling with automatic daily deductions
+
+### Phase 2 — Bolt and Uber API integration for automatic verified earnings
+**Status: Planned**
+
+- Direct API integration with ride-hailing platforms
+- Automatic earnings verification and import
+- Reduced fraud risk with verified data
+- Faster trust score building
+- Real-time earnings tracking
+
+### Phase 3 — Licensed microfinance partner integration for real capital deployment
+**Status: Planned**
+
+- Partnership with licensed Nigerian microfinance institutions
+- Real capital deployment for advances
+- Regulatory compliance and licensing
+- Larger advance amounts with institutional backing
+- Credit bureau integration for broader financial inclusion
+
+### Phase 4 — USSD version for workers without smartphones
+**Status: Planned**
+
+- USSD-based interface for feature phone users
+- Voice and SMS support for accessibility
+- Expanded reach to underserved workers
+- Offline capability for areas with poor connectivity
+- Agent network for cash-in/cash-out services
 
 ## 🎨 Customization
 
@@ -174,27 +217,11 @@ Generate a new secret key:
 python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
 ```
 
-Update `SECRET_KEY` in `PayTrack/settings.py`.
-
-### Email Configuration
-
-To enable email notifications, configure the following in `PayTrack/settings.py`:
-
-```python
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'your-email@gmail.com'
-EMAIL_HOST_PASSWORD = 'your-app-password'
-DEFAULT_FROM_EMAIL = 'noreply@paytrack.ng'
-```
-
-**Note:** For Gmail, you'll need to use an App Password instead of your regular password.
+Update `SECRET_KEY` in `PayTrack/settings.py` or `.env` file.
 
 ### Database Configuration
 
-By default, PayTrack uses SQLite. To use PostgreSQL or MySQL:
+By default, ShiftPay uses SQLite. To use PostgreSQL or MySQL:
 
 **PostgreSQL:**
 ```bash
@@ -206,7 +233,7 @@ Update `DATABASES` in `PayTrack/settings.py`:
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'paytrack_db',
+        'NAME': 'shiftpay_db',
         'USER': 'your_username',
         'PASSWORD': 'your_password',
         'HOST': 'localhost',
@@ -217,28 +244,29 @@ DATABASES = {
 
 ## 🐛 Troubleshooting
 
-### ModuleNotFoundError: No module named 'django-ratelimit'
+### ModuleNotFoundError: No module named 'google.generativeai'
 
 ```bash
-pip install django-ratelimit
+pip install google-generativeai
 ```
 
-### RuntimeError: Model class doesn't declare an explicit app_label
+### Gemini API Error
 
-Ensure all apps are properly listed in `INSTALLED_APPS` in `PayTrack/settings.py`.
+- Verify your `GEMINI_API_KEY` in `.env` file
+- Check that the API key is valid and has credits
+- The app has fallback logic to auto-approve if API fails
 
-### Static files not loading
+### Trust Score Not Updating
 
-Run the following command:
-```bash
-python manage.py collectstatic
-```
+- Ensure you're logging shifts with valid hours and earnings
+- Check that the WorkerProfile is created for the user
+- Try logging 3+ shifts to see the trust score increase
 
-### Email not sending
+### Advance Request Not Approved
 
-- Check your email configuration in settings.py
-- Verify your email provider's SMTP settings
-- For Gmail, use an App Password instead of your regular password
+- Ensure you have logged at least 3 shifts
+- Check that your trust score is 50+
+- Verify your last 7 days earnings are sufficient
 
 ## 📝 Development
 
@@ -270,6 +298,7 @@ python manage.py shell
 3. Use a production database (PostgreSQL recommended)
 4. Configure static files serving
 5. Set up a production web server (Gunicorn + Nginx)
+6. Secure your environment variables
 
 ### Environment Variables
 
@@ -277,7 +306,8 @@ Use environment variables for sensitive information:
 
 ```python
 import os
-SECRET_KEY = os.environ.get('SECRET_KEY')
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
+SECRET_KEY = os.getenv('SECRET_KEY')
 ```
 
 ## 📄 License
@@ -301,9 +331,10 @@ If you encounter any issues or have questions, please open an issue on the repos
 ## 🙏 Acknowledgments
 
 - Django Framework
-- Django Ratelimit
-- All contributors and users of PayTrack
+- Google Gemini AI
+- Bootstrap 5
+- All contributors and users of ShiftPay
 
 ---
 
-**Built with ❤️ using Django**
+**Built with ❤️ using Django & Google Gemini AI**

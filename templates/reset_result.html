@@ -4,12 +4,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Password Reset — PayTrack</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="{% static 'css/index.css' %}" />
-  <link rel="stylesheet" href="{% static 'css/auth.css' %}" />
+  <title>Password Reset — ShiftPay</title>
+  <link rel="stylesheet" href="{% static 'css/auth.css' %}"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 </head>
 <body>
 
@@ -22,8 +19,7 @@
   <nav class="auth-nav">
     <div class="auth-nav-inner">
       <a href="{% url 'index' %}" class="auth-logo">
-        <div class="auth-logo-icon">₦</div>
-        PayTrack
+        <span class="bolt">⚡</span> ShiftPay
       </a>
     </div>
   </nav>
@@ -35,7 +31,7 @@
       {% if status == 'success' %}
 
         <!-- ── SUCCESS STATE ── -->
-        <div class="auth-status-icon status-success">✓</div>
+        <div class="auth-status-icon status-success"><i class="fa-solid fa-circle-check"></i></div>
         <h1 class="auth-card-title">Password reset successful</h1>
         <p class="auth-card-sub">
           {{ message }}
@@ -48,14 +44,14 @@
       {% elif status == 'invalid' %}
 
         <!-- ── INVALID LINK STATE ── -->
-        <div class="auth-status-icon status-warning">⚠</div>
+        <div class="auth-status-icon status-warning"><i class="fa-solid fa-triangle-exclamation"></i></div>
         <h1 class="auth-card-title">Invalid reset link</h1>
         <p class="auth-card-sub">
           {{ message }}
         </p>
 
         <div class="auth-alert warning" style="text-align:left; margin-bottom:24px;">
-          <span class="auth-alert-icon">🔗</span>
+          <span class="auth-alert-icon"><i class="fa-solid fa-link"></i></span>
           <div>The reset link is invalid or has already been used.</div>
         </div>
 
@@ -70,14 +66,14 @@
       {% elif status == 'expired' %}
 
         <!-- ── EXPIRED LINK STATE ── -->
-        <div class="auth-status-icon status-warning">⚠</div>
+        <div class="auth-status-icon status-warning"><i class="fa-solid fa-triangle-exclamation"></i></div>
         <h1 class="auth-card-title">Reset link expired</h1>
         <p class="auth-card-sub">
           {{ message }}
         </p>
 
         <div class="auth-alert warning" style="text-align:left; margin-bottom:24px;">
-          <span class="auth-alert-icon">⏰</span>
+          <span class="auth-alert-icon"><i class="fa-solid fa-clock"></i></span>
           <div>Reset links are valid for 24 hours. Please request a new one.</div>
         </div>
 
@@ -95,11 +91,10 @@
   </main>
 
   <footer class="auth-page-footer">
-    © 2025 PayTrack · <a href="#" style="color:inherit">Privacy</a> · <a href="#" style="color:inherit">Terms</a>
+    © 2025 ShiftPay · <a href="#" style="color:inherit">Privacy</a> · <a href="#" style="color:inherit">Terms</a>
   </footer>
 
 </div>
 
-<script src="{% static 'js/auth.js' %}"></script>
 </body>
 </html>

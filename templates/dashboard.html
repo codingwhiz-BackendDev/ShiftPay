@@ -157,6 +157,12 @@
   <!-- Header -->
   <div class="row mb-4">
     <div class="col-12">
+      {% if is_eligible %}
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>🎉 You qualify for up to ₦{{ max_advance_amount|floatformat:0 }}!</strong> Request your advance <a href="{% url 'advance_request' %}" style="text-decoration: underline;">here →</a>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      {% endif %}
       <h1 style="font-family: 'Syne', sans-serif; font-weight: 700; color: var(--primary);">Good morning, {{ request.user.first_name }} 👋</h1>
       <p style="color: #6c757d;">Your earnings, your advance.</p>
     </div>
@@ -164,6 +170,36 @@
 
   <!-- Stats Row -->
   <div class="row g-4 mb-4">
+    {% if ai_insight %}
+    <div class="col-12">
+      <div class="stat-card" style="border-left: 4px solid #4F46E5; background: rgba(79, 70, 229, 0.02);">
+        <div style="display: flex; align-items: center; gap: 15px;">
+          <div style="font-size: 32px;">🤖</div>
+          <div>
+            <div class="stat-label" style="color: #4F46E5; font-weight: 700;">Your ShiftPay AI Insight</div>
+            <div style="margin-top: 8px; line-height: 1.6;">{{ ai_insight }}</div>
+            <div style="font-size: 12px; color: #6c757d; margin-top: 8px;">Updated daily based on your logs</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% elif shifts_for_insight < 3 %}
+    <div class="col-12">
+      <div class="stat-card" style="border-left: 4px solid #4F46E5; background: rgba(79, 70, 229, 0.02);">
+        <div style="display: flex; align-items: center; gap: 15px;">
+          <div style="font-size: 32px;">🤖</div>
+          <div>
+            <div class="stat-label" style="color: #4F46E5; font-weight: 700;">Your ShiftPay AI Insight</div>
+            <div style="margin-top: 8px;">Log 3 shifts to unlock your personalized AI earnings insight</div>
+            <div class="progress mt-2" style="height: 8px;">
+              <div class="progress-bar" style="background: #4F46E5; width: {{ insight_progress|floatformat:0 }}%"></div>
+            </div>
+            <div style="font-size: 12px; color: #6c757d; margin-top: 5px;">{{ shifts_for_insight }}/3 shifts logged</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
     <div class="col-md-3">
       <div class="stat-card">
         <div class="stat-label">Shifts this month</div>
@@ -188,6 +224,7 @@
         <div class="stat-change mt-2 {% if trust_score >= 70 %}up{% elif trust_score >= 40 %}text-warning{% else %}down{% endif %}">
           {% if trust_score >= 70 %}Excellent{% elif trust_score >= 40 %}Good{% else %}Needs work{% endif %}
         </div>
+        <div style="font-size: 11px; color: #6c757d; margin-top: 5px;">Log consistently to improve</div>
       </div>
     </div>
     <div class="col-md-3">
@@ -197,7 +234,7 @@
           {% if is_eligible %}Eligible{% else %}Not eligible{% endif %}
         </div>
         <div class="stat-change {% if is_eligible %}up{% else %}text-warning{% endif %}">
-          {% if is_eligible %}Up to ₦{{ max_advance_amount|default:0|floatformat:0 }}{% else %}Log {{ shifts_needed }} more shifts{% endif %}
+          {% if is_eligible %}Up to ₦{{ max_advance_amount|default:0|floatformat:0 }}{% else %}Log {{ shifts_needed }} more shifts (need 3 total){% endif %}
         </div>
       </div>
     </div>

@@ -125,11 +125,51 @@
         <div class="form-text">Maximum eligible amount: ₦{{ max_advance_amount|floatformat:0 }}</div>
       </div>
 
+      <div class="mb-3">
+        <label class="form-label">Payout Method</label>
+        <select name="payout_method" class="form-control" id="payout_method" required>
+          <option value="opay">OPay</option>
+          <option value="palmpay">PalmPay</option>
+          <option value="bank_transfer">Bank Transfer</option>
+          <option value="cash_agent">Cash Agent</option>
+        </select>
+      </div>
+
+      <div class="mb-3" id="account_number_field">
+        <label class="form-label">Account Number / Phone Number</label>
+        <input type="text" name="account_number" class="form-control" 
+               placeholder="Enter account number or phone number">
+        <div class="form-text">Your payout will be sent to this account</div>
+      </div>
+
+      <div class="mb-3" id="cash_agent_info" style="display: none;">
+        <div class="alert alert-info">
+          We'll locate the nearest ShiftPay cash agent to you
+        </div>
+      </div>
+
       <div class="mb-4">
         <label class="form-label">Reason (optional)</label>
         <textarea name="reason" class="form-control" rows="3" 
                   placeholder="Why do you need this advance?"></textarea>
       </div>
+
+      <script>
+        document.getElementById('payout_method').addEventListener('change', function() {
+          const accountField = document.getElementById('account_number_field');
+          const cashAgentInfo = document.getElementById('cash_agent_info');
+          
+          if (this.value === 'cash_agent') {
+            accountField.style.display = 'none';
+            cashAgentInfo.style.display = 'block';
+            document.querySelector('input[name="account_number"]').removeAttribute('required');
+          } else {
+            accountField.style.display = 'block';
+            cashAgentInfo.style.display = 'none';
+            document.querySelector('input[name="account_number"]').setAttribute('required', 'required');
+          }
+        });
+      </script>
 
       <button type="submit" class="btn btn-request mb-3">Submit Request</button>
       <a href="{% url 'dashboard' %}" class="btn btn-cancel">Cancel</a>

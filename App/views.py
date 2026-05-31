@@ -230,8 +230,8 @@ def resend_verification(request):
 
     return render(request, 'verify_pending.html', {'email': email, 'resent': True})
 
-def logout(request):
-    auth.logout(request)
+def logout_view(request):
+    auth_logout(request)
     return redirect('login')
 
 def forgot_password(request):
@@ -343,8 +343,62 @@ def dashboard(request):
         worker=worker
     ).order_by('-requested_at')[:5]
     
-    # Calculate shifts needed for eligibility
-    shifts_needed = max(0, 5 - profile.total_shifts_logged)
+    # Calculate shifts needed for eligibility (hackathon: 3 shifts)
+    shifts_needed = max(0, 3 - profile.total_shifts_logged)
+    
+    # Generate AI insight if needed
+    ai_insight = profile.ai_insight
+    shifts_for_insight = ShiftLog.objects.filter(worker=worker).count()
+    insight_progress = min(100, (shifts_for_insight / 3) * 100) if shifts_for_insight < 3 else 100
+    
+    if shifts_for_insight >= 3:
+        # Check if insight was generated today
+        if not profile.last_insight_date or profile.last_insight_date != today:
+            try:
+                import google.generativeai as genai
+                import os
+                
+                genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
+                model = genai.GenerativeModel('gemini-1.5-flash')
+                
+                # Get last 7 shifts for insight
+                last_7_shifts = ShiftLog.objects.filter(
+                    worker=worker
+                ).order_by('-date')[:7]
+                
+                shifts_data = ""
+                for i, shift in enumerate(last_7_shifts, 1):
+                    shifts_data += f"Day {i}: {shift.date} — {shift.hours_worked}hrs — ₦{shift.earnings_today:,} — {shift.job_description}\n"
+                
+                prompt = f"""You are ShiftPay's earnings coach for Nigerian gig workers.
+Analyze this worker's last 7 days and give ONE powerful insight.
+
+Worker: {worker.get_full_name()}
+Job: {profile.get_job_type_display()}
+Daily average target: ₦{profile.daily_avg_earnings:,}
+
+Last 7 days:
+{shifts_data}
+
+Write exactly 3 sentences:
+1. Their single best pattern or strongest day with the actual number
+2. Their weakest point or opportunity with specific suggestion
+3. A motivational projection — if they fix the weakness, 
+   how much more can they earn this month (calculate it)
+
+Be specific with Naira amounts. Sound like a smart friend who 
+understands Lagos hustle, not a corporate AI."""
+                
+                response = model.generate_content(prompt)
+                ai_insight = response.text
+                
+                profile.ai_insight = ai_insight
+                profile.last_insight_date = today
+                profile.save()
+                
+            except Exception as e:
+                # Silently skip if API fails
+                pass
     
     context = {
         'shifts_this_month': shifts_this_month,
@@ -358,6 +412,9 @@ def dashboard(request):
         'total_hours': total_hours,
         'total_earnings': total_earnings,
         'recent_advances': recent_advances,
+        'ai_insight': ai_insight,
+        'shifts_for_insight': shifts_for_insight,
+        'insight_progress': insight_progress,
     }
     
     return render(request, "dashboard.html", context)
@@ -398,7 +455,7 @@ def log_shift(request):
     return redirect('dashboard')
 
 def calculate_trust_score(profile):
-    """Calculate trust score based on shift patterns"""
+    """Calculate trust score based on shift patterns (hackathon-friendly)"""
     worker = profile.user
     shifts = ShiftLog.objects.filter(worker=worker).order_by('-date')
     
@@ -409,17 +466,12 @@ def calculate_trust_score(profile):
     
     score = 50  # Base score
     
-    # Consistency bonus: logged shifts 3 days in a row
-    recent_shifts = shifts[:7]
-    dates = [shift.date for shift in recent_shifts]
-    consecutive = 0
-    for i in range(len(dates) - 1):
-        if (dates[i] - dates[i + 1]).days == 1:
-            consecutive += 1
-        else:
-            break
-    if consecutive >= 2:
+    # Hackathon mode: bonus for total shifts logged (not just consecutive days)
+    total_shifts = shifts.count()
+    if total_shifts >= 3:
         score += 10
+    if total_shifts >= 5:
+        score += 15  # Reach 75 score with 5 shifts
     
     # Earnings stability: if today's earnings within 30% of daily average
     if shifts.count() >= 3:
@@ -436,20 +488,14 @@ def calculate_trust_score(profile):
         if latest.earnings_today > profile.daily_avg_earnings:
             score += 5
     
-    # Penalty: gap of more than 2 days with no log
-    if shifts.count() >= 2:
-        latest = shifts.first()
-        second_latest = shifts[1]
-        gap = (latest.date - second_latest.date).days
-        if gap > 2:
-            score -= 10
+    # Hackathon mode: remove gap penalty to allow same-day shifts
     
     # Cap score at 100
     score = min(score, 100)
     profile.trust_score = score
     
-    # Update eligibility and max advance amount
-    if score >= 60 and profile.total_shifts_logged >= 5:
+    # Update eligibility and max advance amount (hackathon: lower threshold to 50)
+    if score >= 50 and profile.total_shifts_logged >= 3:
         profile.is_eligible = True
         # Calculate max advance: 50% of last 7 days earnings
         seven_days_ago = date.today() - timedelta(days=7)
@@ -470,6 +516,8 @@ def advance_request(request):
     
     if request.method == 'POST':
         amount_requested = request.POST.get('amount_requested')
+        payout_method = request.POST.get('payout_method')
+        account_number = request.POST.get('account_number')
         
         try:
             amount_requested = Decimal(amount_requested)
@@ -478,11 +526,16 @@ def advance_request(request):
             return render(request, 'advance_request.html', {'max_advance_amount': profile.max_advance_amount})
         
         if not profile.is_eligible:
-            messages.error(request, "You are not eligible for an advance yet.")
+            messages.error(request, "You need at least 3 shifts and trust score of 50+ to qualify.")
             return redirect('dashboard')
         
         if amount_requested > profile.max_advance_amount:
             messages.error(request, f"You can only request up to ₦{profile.max_advance_amount}")
+            return render(request, 'advance_request.html', {'max_advance_amount': profile.max_advance_amount})
+        
+        # Validate account number if not cash agent
+        if payout_method != 'cash_agent' and not account_number:
+            messages.error(request, "Please enter your account number.")
             return render(request, 'advance_request.html', {'max_advance_amount': profile.max_advance_amount})
         
         # Get last 7 days earnings for AI decision
@@ -497,25 +550,149 @@ def advance_request(request):
             worker=request.user,
             amount_requested=amount_requested,
             status='pending',
-            ai_decision_reason='Processing...'
+            ai_decision_reason='Processing...',
+            payout_method=payout_method,
+            account_number=account_number
         )
         
-        # Call AI for decision (simplified for demo - auto-approve if within limits)
-        if amount_requested <= profile.max_advance_amount:
+        # Call Gemini API for decision
+        try:
+            import google.generativeai as genai
+            import os
+            
+            genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
+            model = genai.GenerativeModel('gemini-1.5-flash')
+            
+            prompt = f"""You are ShiftPay's advance approval AI for Nigerian gig workers. You make instant, fair advance decisions. Be warm, direct, and speak like you understand hustle and hard work.
+
+Worker Data:
+- Name: {request.user.get_full_name()}
+- Job: {profile.get_job_type_display()}
+- Total shifts logged: {profile.total_shifts_logged}
+- Trust score: {profile.trust_score}/100
+- Earnings last 7 days: ₦{last_7_earnings:,}
+- Daily average earnings: ₦{profile.daily_avg_earnings:,}
+- Amount requested: ₦{amount_requested:,}
+- Maximum they qualify for: ₦{profile.max_advance_amount:,}
+
+Rules:
+- If amount_requested > max_advance_amount: REJECT
+- If trust_score < 50: REJECT  
+- If total_shifts < 3: REJECT
+- Otherwise: APPROVE for the requested amount
+
+Start your response with exactly APPROVED or REJECTED in caps on the first line. Then write 3 sentences explaining the decision warmly — mention their actual earnings numbers and trust score. Make it feel personal, not robotic. End with one motivational line about their hustle."""
+            
+            response = model.generate_content(prompt)
+            ai_text = response.text
+            
+            # Parse the response
+            first_line = ai_text.split('\n')[0].strip()
+            
+            if 'APPROVED' in first_line:
+                advance.status = 'approved'
+                advance.amount_approved = amount_requested
+            elif 'REJECTED' in first_line:
+                advance.status = 'rejected'
+                advance.amount_approved = Decimal('0')
+            else:
+                # Fallback to auto-approve if parsing fails
+                advance.status = 'approved'
+                advance.amount_approved = amount_requested
+            
+            advance.ai_decision_reason = ai_text
+            advance.save()
+            
+            # Create repayment schedule if approved
+            if advance.status == 'approved':
+                from .models import RepaymentSchedule
+                repayment_total = amount_requested * Decimal('1.10')  # 10% fee
+                daily_deduction = (repayment_total / Decimal('14')).quantize(Decimal('0.01'))
+                
+                RepaymentSchedule.objects.create(
+                    advance=advance,
+                    total_repayment=repayment_total,
+                    daily_deduction=daily_deduction,
+                    days_remaining=14,
+                    start_date=date.today() + timedelta(days=1),
+                    is_complete=False
+                )
+            
+            # Store in session for result page
+            request.session['ai_decision'] = ai_text
+            request.session['advance_status'] = advance.status
+            request.session['advance_amount'] = str(amount_requested)
+            request.session['advance_id'] = advance.id
+            request.session['payout_method'] = payout_method
+            request.session['account_number'] = account_number or ''
+            
+            return redirect('advance_result')
+            
+        except Exception as e:
+            # Fallback to auto-approve if API fails
             advance.status = 'approved'
             advance.amount_approved = amount_requested
             advance.ai_decision_reason = f"Based on your consistent work history and trust score of {profile.trust_score}, you qualify for this advance. Keep up the great work!"
-        else:
-            advance.status = 'rejected'
-            advance.ai_decision_reason = f"Requested amount exceeds your maximum eligible amount of ₦{profile.max_advance_amount}."
-        
-        advance.save()
-        
-        if advance.status == 'approved':
-            messages.success(request, f"Advance approved! ₦{amount_requested} will be processed.")
-        else:
-            messages.error(request, f"Advance request rejected: {advance.ai_decision_reason}")
-        
-        return redirect('dashboard')
+            advance.save()
+            
+            # Create repayment schedule
+            from .models import RepaymentSchedule
+            repayment_total = amount_requested * Decimal('1.10')
+            daily_deduction = (repayment_total / Decimal('14')).quantize(Decimal('0.01'))
+            
+            RepaymentSchedule.objects.create(
+                advance=advance,
+                total_repayment=repayment_total,
+                daily_deduction=daily_deduction,
+                days_remaining=14,
+                start_date=date.today() + timedelta(days=1),
+                is_complete=False
+            )
+            
+            request.session['ai_decision'] = advance.ai_decision_reason
+            request.session['advance_status'] = advance.status
+            request.session['advance_amount'] = str(amount_requested)
+            request.session['advance_id'] = advance.id
+            request.session['payout_method'] = payout_method
+            request.session['account_number'] = account_number or ''
+            
+            return redirect('advance_result')
     
     return render(request, 'advance_request.html', {'max_advance_amount': profile.max_advance_amount})
+
+@login_required(login_url='/login/')
+def advance_result(request):
+    ai_decision = request.session.get('ai_decision', '')
+    advance_status = request.session.get('advance_status', '')
+    advance_amount = request.session.get('advance_amount', '0')
+    advance_id = request.session.get('advance_id', '')
+    payout_method = request.session.get('payout_method', 'opay')
+    account_number = request.session.get('account_number', '')
+    
+    # Get repayment schedule if approved
+    repayment_schedule = None
+    if advance_status == 'approved' and advance_id:
+        try:
+            advance = AdvanceRequest.objects.get(id=advance_id)
+            repayment_schedule = advance.repayment_schedule
+        except AdvanceRequest.DoesNotExist:
+            pass
+    
+    # Clear session data
+    request.session.pop('ai_decision', None)
+    request.session.pop('advance_status', None)
+    request.session.pop('advance_amount', None)
+    request.session.pop('advance_id', None)
+    request.session.pop('payout_method', None)
+    request.session.pop('account_number', None)
+    
+    context = {
+        'ai_decision': ai_decision,
+        'advance_status': advance_status,
+        'advance_amount': Decimal(advance_amount),
+        'payout_method': payout_method,
+        'account_number': account_number,
+        'repayment_schedule': repayment_schedule,
+    }
+    
+    return render(request, 'advance_result.html', context)

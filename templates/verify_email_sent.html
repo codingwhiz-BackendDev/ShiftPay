@@ -4,12 +4,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Check Your Email — PayTrack</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="{% static 'css/index.css' %}" />
-  <link rel="stylesheet" href="{% static 'css/auth.css' %}" />
+  <title>Check Your Email — ShiftPay</title>
+  <link rel="stylesheet" href="{% static 'css/auth.css' %}"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 </head>
 <body>
 
@@ -22,8 +19,7 @@
   <nav class="auth-nav">
     <div class="auth-nav-inner">
       <a href="{% url 'index' %}" class="auth-logo">
-        <div class="auth-logo-icon">₦</div>
-        PayTrack
+        <span class="bolt">⚡</span> ShiftPay
       </a>
       <span class="auth-nav-link" style="cursor:default">Step 2 of 2 — Verify email</span>
     </div>
@@ -34,7 +30,7 @@
     <div class="auth-card auth-status-card">
 
       <!-- Icon -->
-      <div class="auth-status-icon status-info">📬</div>
+      <div class="auth-status-icon status-info"><i class="fa-solid fa-envelope-open-text"></i></div>
 
       <!-- Header -->
       <h1 class="auth-card-title">Check your inbox</h1>
@@ -48,14 +44,14 @@
       </div>
 
       <p class="auth-card-sub" style="margin-bottom:24px;">
-        Click the link in that email to activate your PayTrack account. The link expires in <strong style="color:var(--white-70)">24 hours.</strong>
+        Click the link in that email to activate your ShiftPay account. The link expires in <strong style="color:var(--muted)">24 hours.</strong>
       </p>
 
       <!-- Steps -->
       <ul class="auth-steps">
         <li>
           <span class="step-num-badge">1</span>
-          Open the email from <strong style="color:var(--white-70)">noreply@paytrack.ng</strong>
+          Open the email from <strong style="color:var(--muted)">noreply@shiftpay.com</strong>
         </li>
         <li>
           <span class="step-num-badge">2</span>
@@ -82,7 +78,7 @@
       </form>
 
       <div class="auth-alert info" style="margin-top:20px; text-align:left;">
-        <span class="auth-alert-icon">💡</span>
+        <span class="auth-alert-icon"><i class="fa-solid fa-lightbulb"></i></span>
         <div>Check your spam or junk folder if you don't see it within a minute.</div>
       </div>
 
@@ -94,11 +90,10 @@
   </main>
 
   <footer class="auth-page-footer">
-    © 2025 PayTrack · <a href="#" style="color:inherit">Privacy</a> · <a href="#" style="color:inherit">Terms</a>
+    © 2025 ShiftPay · <a href="#" style="color:inherit">Privacy</a> · <a href="#" style="color:inherit">Terms</a>
   </footer>
 
 </div>
 
-<script src="{% static 'js/auth.js' %}"></script>
 </body>
 </html>
