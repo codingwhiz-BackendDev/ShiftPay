@@ -343,6 +343,21 @@ def dashboard(request):
         worker=worker
     ).order_by('-requested_at')[:5]
     
+    # Calculate total outstanding advances
+    total_outstanding = AdvanceRequest.objects.filter(
+        worker=worker,
+        status='approved'
+    ).aggregate(total=Sum('amount_approved'))['total'] or Decimal('0')
+    
+    # Get total earnings
+    total_earnings = ShiftLog.objects.filter(
+        worker=worker
+    ).aggregate(total=Sum('earnings_today'))['total'] or Decimal('0')
+    
+    # Calculate available advance amount (total earnings - outstanding advances)
+    available_advance = total_earnings - total_outstanding
+    max_advance = min(profile.max_advance_amount, available_advance) if available_advance > 0 else Decimal('0')
+    
     # Calculate shifts needed for eligibility (hackathon: 3 shifts)
     shifts_needed = max(0, 3 - profile.total_shifts_logged)
     
@@ -359,7 +374,7 @@ def dashboard(request):
                 import os
                 
                 genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
-                model = genai.GenerativeModel('gemini-1.5-flash')
+                model = genai.GenerativeModel('gemini-2.5-flash')
                 
                 # Get last 7 shifts for insight
                 last_7_shifts = ShiftLog.objects.filter(
@@ -405,7 +420,7 @@ understands Lagos hustle, not a corporate AI."""
         'earnings_this_month': earnings_this_month,
         'trust_score': profile.trust_score,
         'is_eligible': profile.is_eligible,
-        'max_advance_amount': profile.max_advance_amount,
+        'max_advance_amount': max_advance,
         'total_shifts_logged': profile.total_shifts_logged,
         'shifts_needed': shifts_needed,
         'recent_shifts': recent_shifts,
@@ -533,6 +548,22 @@ def advance_request(request):
             messages.error(request, f"You can only request up to ₦{profile.max_advance_amount}")
             return render(request, 'advance_request.html', {'max_advance_amount': profile.max_advance_amount})
         
+        # Check total outstanding advances
+        total_outstanding = AdvanceRequest.objects.filter(
+            worker=request.user,
+            status='approved'
+        ).aggregate(total=Sum('amount_approved'))['total'] or Decimal('0')
+        
+        # Get total earnings
+        total_earnings = ShiftLog.objects.filter(
+            worker=request.user
+        ).aggregate(total=Sum('earnings_today'))['total'] or Decimal('0')
+        
+        # Prevent borrowing more than total earnings
+        if (total_outstanding + amount_requested) > total_earnings:
+            messages.error(request, f"You have ₦{total_outstanding:,} in outstanding advances. Your total earnings are ₦{total_earnings:,}. You can only request up to ₦{total_earnings - total_outstanding:,} more.")
+            return render(request, 'advance_request.html', {'max_advance_amount': min(profile.max_advance_amount, total_earnings - total_outstanding)})
+        
         # Validate account number if not cash agent
         if payout_method != 'cash_agent' and not account_number:
             messages.error(request, "Please enter your account number.")
@@ -560,8 +591,18 @@ def advance_request(request):
             import google.generativeai as genai
             import os
             
-            genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
-            model = genai.GenerativeModel('gemini-1.5-flash')
+            api_key = os.getenv('GEMINI_API_KEY')
+            if not api_key:
+                raise ValueError("GEMINI_API_KEY not found in environment variables")
+            
+            genai.configure(api_key=api_key)
+            model = genai.GenerativeModel('gemini-2.5-flash')
+            
+            # Get total outstanding advances
+            total_outstanding = AdvanceRequest.objects.filter(
+                worker=request.user,
+                status='approved'
+            ).aggregate(total=Sum('amount_approved'))['total'] or Decimal('0')
             
             prompt = f"""You are ShiftPay's advance approval AI for Nigerian gig workers. You make instant, fair advance decisions. Be warm, direct, and speak like you understand hustle and hard work.
 
@@ -572,16 +613,19 @@ Worker Data:
 - Trust score: {profile.trust_score}/100
 - Earnings last 7 days: ₦{last_7_earnings:,}
 - Daily average earnings: ₦{profile.daily_avg_earnings:,}
+- Total earnings: ₦{ShiftLog.objects.filter(worker=request.user).aggregate(total=Sum('earnings_today'))['total'] or Decimal('0'):,}
 - Amount requested: ₦{amount_requested:,}
 - Maximum they qualify for: ₦{profile.max_advance_amount:,}
+- Total outstanding advances: ₦{total_outstanding:,}
 
 Rules:
 - If amount_requested > max_advance_amount: REJECT
 - If trust_score < 50: REJECT  
 - If total_shifts < 3: REJECT
+- If (total_outstanding + amount_requested) > total_earnings: REJECT
 - Otherwise: APPROVE for the requested amount
 
-Start your response with exactly APPROVED or REJECTED in caps on the first line. Then write 3 sentences explaining the decision warmly — mention their actual earnings numbers and trust score. Make it feel personal, not robotic. End with one motivational line about their hustle."""
+Start your response with exactly APPROVED or REJECTED in caps on the first line. Then write 3 sentences explaining the decision warmly — mention their actual earnings numbers, trust score, and specific work details. Make it feel personal, not robotic. End with one motivational line about their hustle."""
             
             response = model.generate_content(prompt)
             ai_text = response.text
@@ -629,10 +673,12 @@ Start your response with exactly APPROVED or REJECTED in caps on the first line.
             return redirect('advance_result')
             
         except Exception as e:
-            # Fallback to auto-approve if API fails
+            # Log the error for debugging
+            print(f"Gemini API Error: {type(e).__name__}: {e}")
+            # Fallback to auto-approve if API fails, with personalized message
             advance.status = 'approved'
             advance.amount_approved = amount_requested
-            advance.ai_decision_reason = f"Based on your consistent work history and trust score of {profile.trust_score}, you qualify for this advance. Keep up the great work!"
+            advance.ai_decision_reason = f"APPROVED\n\nHey {request.user.first_name}! With {profile.total_shifts_logged} shifts logged and a trust score of {profile.trust_score}, you're building something solid. You've earned ₦{last_7_earnings:,} in the last 7 days, which shows real consistency. This ₦{amount_requested:,} advance is yours — keep grinding, your hustle is paying off!"
             advance.save()
             
             # Create repayment schedule
@@ -671,10 +717,13 @@ def advance_result(request):
     
     # Get repayment schedule if approved
     repayment_schedule = None
+    fee_amount = Decimal('0')
     if advance_status == 'approved' and advance_id:
         try:
             advance = AdvanceRequest.objects.get(id=advance_id)
             repayment_schedule = advance.repayment_schedule
+            if repayment_schedule:
+                fee_amount = repayment_schedule.total_repayment - Decimal(advance_amount)
         except AdvanceRequest.DoesNotExist:
             pass
     
@@ -693,6 +742,7 @@ def advance_result(request):
         'payout_method': payout_method,
         'account_number': account_number,
         'repayment_schedule': repayment_schedule,
+        'fee_amount': fee_amount,
     }
     
     return render(request, 'advance_result.html', context)

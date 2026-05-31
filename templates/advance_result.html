@@ -2,213 +2,254 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Advance Result — ShiftPay</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <style>
-    :root {
-      --primary: #0A6640;
-      --accent: #F5A623;
-      --background: #F8F9FA;
-      --text: #212529;
-      --white: #ffffff;
-      --ai-indigo: #4F46E5;
-    }
-    body {
-      background: var(--background);
-      font-family: 'DM Sans', sans-serif;
-      color: var(--text);
+    .result-page {
       min-height: 100vh;
+      background: var(--bg);
+      padding: 20px;
     }
     .result-container {
       max-width: 700px;
-      margin: 40px auto;
+      margin: 0 auto;
       padding: 40px;
     }
     .result-card {
-      background: var(--white);
+      background: var(--surface);
+      border: 1px solid var(--border);
       border-radius: 20px;
       padding: 50px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
       text-align: center;
     }
     .result-card.approved {
-      border: 4px solid var(--primary);
+      border: 2px solid var(--green);
     }
     .result-card.rejected {
-      border: 4px solid #dc3545;
+      border: 2px solid var(--danger);
     }
-    .status-badge {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      font-size: 48px;
-      margin-bottom: 20px;
-      display: inline-block;
+    .status-icon {
+      font-size: 64px;
+      margin-bottom: 24px;
     }
-    .status-badge.approved {
-      color: var(--primary);
+    .status-icon.approved {
+      color: var(--green);
     }
-    .status-badge.rejected {
-      color: #dc3545;
+    .status-icon.rejected {
+      color: var(--danger);
+    }
+    .status-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 32px;
+      margin-bottom: 16px;
+    }
+    .status-text.approved {
+      color: var(--green);
+    }
+    .status-text.rejected {
+      color: var(--danger);
     }
     .amount-display {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Space Grotesk', sans-serif;
       font-weight: 700;
-      font-size: 42px;
-      color: var(--text);
-      margin: 20px 0;
+      font-size: 36px;
+      color: var(--white);
+      margin: 24px 0;
     }
     .ai-decision {
-      background: rgba(79, 70, 229, 0.05);
-      border-left: 4px solid var(--ai-indigo);
-      padding: 25px;
+      background: rgba(79, 70, 229, 0.1);
+      border-left: 4px solid #4F46E5;
+      padding: 24px;
       text-align: left;
-      margin: 30px 0;
-      border-radius: 8px;
-      font-size: 16px;
+      margin: 32px 0;
+      border-radius: 10px;
+      font-size: 15px;
       line-height: 1.6;
+      color: var(--white);
     }
     .ai-decision strong {
-      color: var(--ai-indigo);
+      color: #4F46E5;
     }
     .repayment-card {
       background: rgba(245, 166, 35, 0.1);
-      border: 2px solid var(--accent);
+      border: 2px solid var(--gold);
       border-radius: 12px;
-      padding: 25px;
-      margin: 30px 0;
+      padding: 24px;
+      margin: 32px 0;
       text-align: left;
     }
     .repayment-card h4 {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Space Grotesk', sans-serif;
       font-weight: 700;
-      color: var(--accent);
-      margin-bottom: 15px;
+      color: var(--gold);
+      margin-bottom: 16px;
+      font-size: 18px;
     }
     .repayment-row {
       display: flex;
       justify-content: space-between;
-      margin: 10px 0;
+      margin: 12px 0;
       font-size: 15px;
     }
     .repayment-row .label {
-      color: #6c757d;
+      color: var(--muted);
     }
     .repayment-row .value {
       font-weight: 600;
+      color: var(--white);
     }
     .payout-info {
-      background: rgba(10, 102, 64, 0.05);
-      border-radius: 8px;
+      background: rgba(10, 102, 64, 0.1);
+      border-radius: 10px;
       padding: 20px;
-      margin: 20px 0;
+      margin: 24px 0;
       font-size: 15px;
+      color: var(--white);
+      text-align: left;
+    }
+    .payout-info strong {
+      color: var(--green);
     }
     .btn-back {
-      background: var(--primary);
+      background: var(--green);
       border: none;
       padding: 16px 40px;
-      font-weight: 600;
+      font-weight: 700;
       border-radius: 10px;
       color: var(--white);
       font-size: 16px;
-      margin-top: 30px;
+      margin-top: 32px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.2s;
     }
     .btn-back:hover {
       background: #085233;
+      transform: translateY(-2px);
     }
     .improvement-list {
       text-align: left;
-      margin: 20px 0;
-      padding-left: 20px;
+      margin: 24px 0;
+      padding-left: 24px;
     }
     .improvement-list li {
-      margin: 10px 0;
-      color: #6c757d;
+      margin: 12px 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+    .encouragement {
+      margin: 32px 0;
+      padding: 20px;
+      background: rgba(10, 102, 64, 0.1);
+      border-radius: 10px;
+      color: var(--white);
+    }
+    .encouragement strong {
+      color: var(--green);
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 14px;
+      margin-bottom: 24px;
+      transition: color 0.2s;
+    }
+    .back-link:hover {
+      color: var(--white);
     }
   </style>
 </head>
 <body>
 
-<div class="container result-container">
+<div class="result-page">
+  <div class="result-container">
+    <a href="{% url 'dashboard' %}" class="back-link">
+      <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
   
-  {% if advance_status == 'approved' %}
-    <div class="result-card approved">
-      <div class="status-badge approved">APPROVED ✓</div>
-      <div class="amount-display">₦{{ advance_amount|floatformat:0 }} advance approved</div>
-      
-      <div class="ai-decision">
-        {{ ai_decision|linebreaks }}
-      </div>
-      
-      <div class="payout-info">
-        <strong>💳 Payout Method:</strong> {{ payout_method|title }}<br>
-        {% if account_number %}
-          <strong>Account:</strong> ****{{ account_number|slice:"-4:" }}<br>
-        {% else %}
-          <strong>Visit your nearest ShiftPay cash agent with your approval code.</strong><br>
-        {% endif %}
-        <strong>Processing time:</strong> Within 5 minutes
-      </div>
-      
-      {% if repayment_schedule %}
-        <div class="repayment-card">
-          <h4>💰 Your Repayment Plan</h4>
-          <div class="repayment-row">
-            <span class="label">Total to repay:</span>
-            <span class="value">₦{{ repayment_schedule.total_repayment|floatformat:0 }}</span>
-          </div>
-          <div class="repayment-row">
-            <span class="label">Duration:</span>
-            <span class="value">14 days</span>
-          </div>
-          <div class="repayment-row">
-            <span class="label">Daily deduction:</span>
-            <span class="value">₦{{ repayment_schedule.daily_deduction|floatformat:0 }}</span>
-          </div>
-          <div class="repayment-row">
-            <span class="label">Fee:</span>
-            <span class="value">10% flat (₦{{ repayment_schedule.total_repayment|sub:advance_amount|floatformat:0 }})</span>
-          </div>
-          <div style="margin-top: 15px; font-size: 13px; color: #6c757d;">
-            Your first deduction starts 24 hours after you receive your advance.
-          </div>
+    {% if advance_status == 'approved' %}
+      <div class="result-card approved">
+        <div class="status-icon approved"><i class="fas fa-circle-check"></i></div>
+        <div class="status-text approved">APPROVED</div>
+        <div class="amount-display">₦{{ advance_amount|floatformat:0 }} advance approved</div>
+        
+        <div class="ai-decision">
+          {{ ai_decision|linebreaks }}
         </div>
-      {% endif %}
-      
-      <a href="{% url 'dashboard' %}" class="btn btn-back">Back to Dashboard</a>
-    </div>
-  
-  {% else %}
-    <div class="result-card rejected">
-      <div class="status-badge rejected">NOT APPROVED</div>
-      
-      <div class="ai-decision">
-        {{ ai_decision|linebreaks }}
+        
+        <div class="payout-info">
+          <strong><i class="fas fa-credit-card"></i> Payout Method:</strong> {{ payout_method|title }}<br>
+          {% if account_number %}
+            <strong>Account:</strong> ****{{ account_number|slice:"-4:" }}<br>
+          {% else %}
+            <strong>Visit your nearest ShiftPay cash agent with your approval code.</strong><br>
+          {% endif %}
+          <strong>Processing time:</strong> Within 5 minutes
+        </div>
+        
+        {% if repayment_schedule %}
+          <div class="repayment-card">
+            <h4><i class="fas fa-coins"></i> Your Repayment Plan</h4>
+            <div class="repayment-row">
+              <span class="label">Total to repay:</span>
+              <span class="value">₦{{ repayment_schedule.total_repayment|floatformat:0 }}</span>
+            </div>
+            <div class="repayment-row">
+              <span class="label">Duration:</span>
+              <span class="value">14 days</span>
+            </div>
+            <div class="repayment-row">
+              <span class="label">Daily deduction:</span>
+              <span class="value">₦{{ repayment_schedule.daily_deduction|floatformat:0 }}</span>
+            </div>
+            <div class="repayment-row">
+              <span class="label">Fee:</span>
+              <span class="value">10% flat (₦{{ fee_amount|floatformat:0 }})</span>
+            </div>
+            <div style="margin-top: 16px; font-size: 13px; color: var(--muted);">
+              Your first deduction starts 24 hours after you receive your advance.
+            </div>
+          </div>
+        {% endif %}
+        
+        <a href="{% url 'dashboard' %}" class="btn-back">Back to Dashboard</a>
       </div>
-      
-      <div style="text-align: left; margin: 20px 0;">
-        <h5 style="font-family: 'Syne', sans-serif; font-weight: 700; color: var(--text);">What you need to improve:</h5>
-        <ul class="improvement-list">
-          <li>Log at least 3 shifts to qualify</li>
-          <li>Build your trust score to 50+ by logging consistently</li>
-          <li>Keep your earnings stable day-to-day</li>
-        </ul>
+    
+    {% else %}
+      <div class="result-card rejected">
+        <div class="status-icon rejected"><i class="fas fa-circle-xmark"></i></div>
+        <div class="status-text rejected">NOT APPROVED</div>
+        
+        <div class="ai-decision">
+          {{ ai_decision|linebreaks }}
+        </div>
+        
+        <div style="text-align: left; margin: 24px 0;">
+          <h5 style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: var(--white); font-size: 18px;">What you need to improve:</h5>
+          <ul class="improvement-list">
+            <li>Log at least 3 shifts to qualify</li>
+            <li>Build your trust score to 50+ by logging consistently</li>
+            <li>Keep your earnings stable day-to-day</li>
+          </ul>
+        </div>
+        
+        <div class="encouragement">
+          <strong>Keep logging. You're building something real.</strong>
+        </div>
+        
+        <a href="{% url 'dashboard' %}" class="btn-back">Back to Dashboard</a>
       </div>
-      
-      <div style="margin: 30px 0; padding: 20px; background: rgba(10, 102, 64, 0.05); border-radius: 8px;">
-        <strong style="color: var(--primary);">Keep logging. You're building something real.</strong>
-      </div>
-      
-      <a href="{% url 'dashboard' %}" class="btn btn-back">Back to Dashboard</a>
-    </div>
-  
-  {% endif %}
-
+    
+    {% endif %}
+  </div>
 </div>
 
 </body>

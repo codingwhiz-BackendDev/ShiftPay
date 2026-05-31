@@ -2,180 +2,226 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Request Advance — ShiftPay</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <style>
-    :root {
-      --primary: #0A6640;
-      --accent: #F5A623;
-      --background: #F8F9FA;
-      --text: #212529;
-      --white: #ffffff;
+    .advance-page {
+      min-height: 100vh;
+      background: var(--bg);
+      padding: 20px;
     }
-    body {
-      background: var(--background);
-      font-family: 'DM Sans', sans-serif;
-      color: var(--text);
-    }
-    .navbar-brand {
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      color: var(--primary) !important;
-      font-size: 24px;
-    }
-    .request-container {
+    .advance-container {
       max-width: 600px;
-      margin: 40px auto;
-      padding: 30px;
-      background: var(--white);
+      margin: 0 auto;
+      padding: 40px;
+    }
+    .advance-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
       border-radius: 16px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      padding: 40px;
     }
-    .request-header {
+    .advance-header {
       text-align: center;
-      margin-bottom: 30px;
+      margin-bottom: 32px;
     }
-    .request-header h1 {
-      font-family: 'Syne', sans-serif;
+    .advance-header h1 {
+      font-family: 'Space Grotesk', sans-serif;
       font-weight: 700;
-      color: var(--primary);
-      font-size: 28px;
+      font-size: 32px;
+      color: var(--white);
+      margin-bottom: 8px;
     }
-    .form-label {
+    .advance-header p {
+      color: var(--muted);
+      font-size: 15px;
+    }
+    .advance-form-group {
+      margin-bottom: 24px;
+    }
+    .advance-label {
+      display: block;
       font-weight: 600;
-      color: var(--text);
+      color: var(--white);
+      margin-bottom: 8px;
+      font-size: 14px;
     }
-    .form-control {
-      border: 1px solid #dee2e6;
-      border-radius: 8px;
-      padding: 12px 16px;
+    .advance-input,
+    .advance-select,
+    .advance-textarea {
+      width: 100%;
+      padding: 14px 16px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--white);
+      font-size: 15px;
+      transition: all 0.2s;
     }
-    .form-control:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(10, 102, 64, 0.1);
+    .advance-input:focus,
+    .advance-select:focus,
+    .advance-textarea:focus {
+      outline: none;
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(10, 102, 64, 0.2);
     }
-    .btn-request {
-      background: var(--accent);
+    .advance-input::placeholder,
+    .advance-textarea::placeholder {
+      color: var(--muted);
+    }
+    .advance-textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+    .advance-hint {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+    .advance-btn {
+      width: 100%;
+      padding: 16px;
+      background: var(--gold);
       border: none;
-      padding: 14px 32px;
-      font-weight: 600;
-      border-radius: 8px;
-      width: 100%;
-      color: var(--text);
+      border-radius: 10px;
+      color: var(--bg);
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 12px;
     }
-    .btn-request:hover {
+    .advance-btn:hover {
       background: #e69520;
+      transform: translateY(-2px);
     }
-    .btn-cancel {
+    .advance-btn-secondary {
       background: transparent;
-      border: 2px solid #dee2e6;
-      padding: 14px 32px;
-      font-weight: 600;
-      border-radius: 8px;
-      width: 100%;
-      color: #6c757d;
+      border: 2px solid var(--border);
+      color: var(--muted);
     }
-    .btn-cancel:hover {
-      background: #f8f9fa;
+    .advance-btn-secondary:hover {
+      border-color: var(--muted);
+      background: rgba(255,255,255,0.05);
+    }
+    .advance-alert {
+      background: rgba(245, 166, 35, 0.1);
+      border: 1px solid var(--gold);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 24px;
+      color: var(--white);
+      font-size: 14px;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 14px;
+      margin-bottom: 24px;
+      transition: color 0.2s;
+    }
+    .back-link:hover {
+      color: var(--white);
     }
   </style>
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-white">
-  <div class="container">
-    <a class="navbar-brand" href="#">ShiftPay</a>
-    <div class="navbar-nav ms-auto">
-      <span class="nav-link me-3">{{ request.user.first_name }}</span>
-      <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
-    </div>
-  </div>
-</nav>
+<div class="advance-page">
+  <div class="advance-container">
+    <a href="{% url 'dashboard' %}" class="back-link">
+      <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
 
-<div class="container">
-  <div class="request-container">
-    <div class="request-header">
-      <h1>Request Advance</h1>
-      <p style="color: #6c757d;">Based on your work history, you can request up to ₦{{ max_advance_amount|floatformat:0 }}</p>
-    </div>
-
-    {% if messages %}
-      <div class="alert alert-info">
-        {% for message in messages %}
-          {{ message }}
-        {% endfor %}
-      </div>
-    {% endif %}
-
-    <form method="post" action="{% url 'advance_request' %}">
-      {% csrf_token %}
-      
-      <div class="mb-3">
-        <label class="form-label">Amount Requested (₦)</label>
-        <input type="number" name="amount_requested" class="form-control" 
-               placeholder="Enter amount" 
-               min="100" 
-               max="{{ max_advance_amount|floatformat:0 }}"
-               required>
-        <div class="form-text">Maximum eligible amount: ₦{{ max_advance_amount|floatformat:0 }}</div>
+    <div class="advance-card">
+      <div class="advance-header">
+        <h1>Request Advance</h1>
+        <p>Based on your work history, you can request up to ₦{{ max_advance_amount|floatformat:0 }}</p>
       </div>
 
-      <div class="mb-3">
-        <label class="form-label">Payout Method</label>
-        <select name="payout_method" class="form-control" id="payout_method" required>
-          <option value="opay">OPay</option>
-          <option value="palmpay">PalmPay</option>
-          <option value="bank_transfer">Bank Transfer</option>
-          <option value="cash_agent">Cash Agent</option>
-        </select>
-      </div>
-
-      <div class="mb-3" id="account_number_field">
-        <label class="form-label">Account Number / Phone Number</label>
-        <input type="text" name="account_number" class="form-control" 
-               placeholder="Enter account number or phone number">
-        <div class="form-text">Your payout will be sent to this account</div>
-      </div>
-
-      <div class="mb-3" id="cash_agent_info" style="display: none;">
-        <div class="alert alert-info">
-          We'll locate the nearest ShiftPay cash agent to you
+      {% if messages %}
+        <div class="advance-alert">
+          {% for message in messages %}
+            {{ message }}
+          {% endfor %}
         </div>
-      </div>
+      {% endif %}
 
-      <div class="mb-4">
-        <label class="form-label">Reason (optional)</label>
-        <textarea name="reason" class="form-control" rows="3" 
-                  placeholder="Why do you need this advance?"></textarea>
-      </div>
+      <form method="post" action="{% url 'advance_request' %}">
+        {% csrf_token %}
+        
+        <div class="advance-form-group">
+          <label class="advance-label">Amount Requested (₦)</label>
+          <input type="number" name="amount_requested" class="advance-input" 
+                 placeholder="Enter amount" 
+                 min="100" 
+                 max="{{ max_advance_amount|floatformat:0 }}"
+                 required>
+          <div class="advance-hint">Maximum eligible amount: ₦{{ max_advance_amount|floatformat:0 }}</div>
+        </div>
 
-      <script>
-        document.getElementById('payout_method').addEventListener('change', function() {
-          const accountField = document.getElementById('account_number_field');
-          const cashAgentInfo = document.getElementById('cash_agent_info');
-          
-          if (this.value === 'cash_agent') {
-            accountField.style.display = 'none';
-            cashAgentInfo.style.display = 'block';
-            document.querySelector('input[name="account_number"]').removeAttribute('required');
-          } else {
-            accountField.style.display = 'block';
-            cashAgentInfo.style.display = 'none';
-            document.querySelector('input[name="account_number"]').setAttribute('required', 'required');
-          }
-        });
-      </script>
+        <div class="advance-form-group">
+          <label class="advance-label">Payout Method</label>
+          <select name="payout_method" class="advance-select" id="payout_method" required>
+            <option value="opay">OPay</option>
+            <option value="palmpay">PalmPay</option>
+            <option value="bank_transfer">Bank Transfer</option>
+            <option value="cash_agent">Cash Agent</option>
+          </select>
+        </div>
 
-      <button type="submit" class="btn btn-request mb-3">Submit Request</button>
-      <a href="{% url 'dashboard' %}" class="btn btn-cancel">Cancel</a>
-    </form>
+        <div class="advance-form-group" id="account_number_field">
+          <label class="advance-label">Account Number / Phone Number</label>
+          <input type="text" name="account_number" class="advance-input" 
+                 placeholder="Enter account number or phone number">
+          <div class="advance-hint">Your payout will be sent to this account</div>
+        </div>
+
+        <div class="advance-form-group" id="cash_agent_info" style="display: none;">
+          <div class="advance-alert">
+            <i class="fas fa-info-circle"></i> We'll locate the nearest ShiftPay cash agent to you
+          </div>
+        </div>
+
+        <div class="advance-form-group">
+          <label class="advance-label">Reason (optional)</label>
+          <textarea name="reason" class="advance-textarea" 
+                    placeholder="Why do you need this advance?"></textarea>
+        </div>
+
+        <button type="submit" class="advance-btn">
+          <i class="fas fa-bolt"></i> Submit Request
+        </button>
+        <a href="{% url 'dashboard' %}" class="advance-btn advance-btn-secondary">
+          Cancel
+        </a>
+      </form>
+    </div>
   </div>
 </div>
+
+<script>
+  document.getElementById('payout_method').addEventListener('change', function() {
+    const accountField = document.getElementById('account_number_field');
+    const cashAgentInfo = document.getElementById('cash_agent_info');
+    
+    if (this.value === 'cash_agent') {
+      accountField.style.display = 'none';
+      cashAgentInfo.style.display = 'block';
+      document.querySelector('input[name="account_number"]').removeAttribute('required');
+    } else {
+      accountField.style.display = 'block';
+      cashAgentInfo.style.display = 'none';
+      document.querySelector('input[name="account_number"]').setAttribute('required', 'required');
+    }
+  });
+</script>
 
 </body>
 </html>
