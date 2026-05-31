@@ -55,6 +55,20 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://shiftpay.quikdb.net",
+    "https://www.shiftpay.quikdb.net",
+]
+
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
+CSRF_COOKIE_DOMAIN = ".quikdb.net"
+SESSION_COOKIE_DOMAIN = ".quikdb.net"
+
+SECURE_SSL_REDIRECT = True
 CSRF_TRUSTED_ORIGINS = [
     "https://shiftpay.quikdb.net",
     "https://www.shiftpay.quikdb.net", 
