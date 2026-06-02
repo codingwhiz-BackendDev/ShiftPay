@@ -1,5 +1,4 @@
 import os
-import dj_database_url
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -9,7 +8,7 @@ load_dotenv(BASE_DIR / '.env')
 
 SECRET_KEY = 'django-insecure-ya345%qsmlp$#s(@!es1pg8s$c6y1t)q0hg2_zsfy=ppagehyy'
 
-DEBUG = False
+DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = ["*"]
 
@@ -55,25 +54,14 @@ TEMPLATES = [
 WSGI_APPLICATION = 'PayTrack.wsgi.application'
 
 # ============================================================
-# DATABASE — PostgreSQL on QuikDB, SQLite locally
+# DATABASE — SQLite
 # ============================================================
-DATABASE_URL = os.getenv('DATABASE_URL')
-
-if DATABASE_URL:
-    DATABASES = {
-        'default': dj_database_url.parse(
-            DATABASE_URL,
-            conn_max_age=600,
-            ssl_require=True,
-        )
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -116,17 +104,22 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # ============================================================
 # HTTPS + PROXY
 # ============================================================
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_SSL_REDIRECT = False
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = False
 
 # ============================================================
 # CSRF
 # ============================================================
-CSRF_TRUSTED_ORIGINS = [
-    "https://shiftpay.quikdb.net",
-    "https://www.shiftpay.quikdb.net",
-]
-CSRF_COOKIE_SECURE = True
+if not DEBUG:
+    CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',')
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+else:
+    CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'http://127.0.0.1:8000']
+    CSRF_COOKIE_SECURE = False
+    SESSION_COOKIE_SECURE = False
+
 CSRF_COOKIE_SAMESITE = 'Lax'
 CSRF_COOKIE_HTTPONLY = False
 CSRF_COOKIE_DOMAIN = None
@@ -135,7 +128,6 @@ CSRF_USE_SESSIONS = False
 # ============================================================
 # SESSION
 # ============================================================
-SESSION_COOKIE_SECURE = True
 SESSION_COOKIE_SAMESITE = 'Lax'
 SESSION_COOKIE_DOMAIN = None
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
