@@ -1,0 +1,7 @@
+{
+  "name": "shiftpay",
+  "runtime": "python",
+  "buildCommand": "pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate",
+  "startCommand": "gunicorn PayTrack.wsgi:application --bind 0.0.0.0:$PORT",
+  "port": 8000
+}
