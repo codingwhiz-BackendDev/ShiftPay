@@ -22,6 +22,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy project
 COPY . .
 
+# Run migrations
+RUN python manage.py migrate --noinput
+
 # Collect static files
 RUN python manage.py collectstatic --noinput
 
