@@ -8,7 +8,7 @@ load_dotenv(BASE_DIR / '.env')
 
 SECRET_KEY = 'django-insecure-ya345%qsmlp$#s(@!es1pg8s$c6y1t)q0hg2_zsfy=ppagehyy'
 
-DEBUG = os.getenv('DEBUG', 'True') == 'True'
+DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 
@@ -111,14 +111,9 @@ if not DEBUG:
 # ============================================================
 # CSRF
 # ============================================================
-if not DEBUG:
-    CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',')
-    CSRF_COOKIE_SECURE = True
-    SESSION_COOKIE_SECURE = True
-else:
-    CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'http://127.0.0.1:8000']
-    CSRF_COOKIE_SECURE = False
-    SESSION_COOKIE_SECURE = False
+CSRF_TRUSTED_ORIGINS = ['https://shiftpay.quikdb.net']
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 
 CSRF_COOKIE_SAMESITE = 'Lax'
 CSRF_COOKIE_HTTPONLY = False

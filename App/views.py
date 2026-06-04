@@ -13,6 +13,7 @@ from django.core.exceptions import ValidationError
 from django_ratelimit.decorators import ratelimit
 from django.db.models import Sum, Count, Q, Avg
 from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime, timedelta, date
 from decimal import Decimal
 import anthropic
@@ -35,6 +36,7 @@ def dashboard(request):
 # REGISTER
 # ─────────────────────────────────────────────
 @ratelimit(key='ip', rate='5/m', block=True)
+@csrf_exempt
 def register(request):
     if request.method == 'POST':
         full_name = request.POST.get('full_name', '').strip()
@@ -161,6 +163,7 @@ def verify_email(request, uidb64, token):
 # ─────────────────────────────────────────────
 
 @ratelimit(key='ip', rate='10/m', block=True)
+@csrf_exempt
 def login(request):
     # Already authenticated — skip the login page
     if request.user.is_authenticated:
@@ -198,6 +201,7 @@ def login(request):
 # ─────────────────────────────────────────────
 # RESEND VERIFICATION
 # ─────────────────────────────────────────────
+@csrf_exempt
 def resend_verification(request):
     if request.method != 'POST':
         return redirect('register')
@@ -234,6 +238,7 @@ def logout_view(request):
     auth_logout(request)
     return redirect('login')
 
+@csrf_exempt
 def forgot_password(request):
     if request.method == "POST":
         email = request.POST.get("email", "").strip().lower()
@@ -266,6 +271,7 @@ def forgot_password(request):
 
     return render(request, "forgot_password.html")
 
+@csrf_exempt
 def reset_password(request, uidb64, token):
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
@@ -435,6 +441,7 @@ understands Lagos hustle, not a corporate AI."""
     return render(request, "dashboard.html", context)
 
 @login_required(login_url='/login/')
+@csrf_exempt
 def log_shift(request):
     if request.method == 'POST':
         hours_worked = request.POST.get('hours_worked')
@@ -526,6 +533,7 @@ def calculate_trust_score(profile):
     profile.save()
 
 @login_required(login_url='/login/')
+@csrf_exempt
 def advance_request(request):
     profile = request.user.worker_profile
     
